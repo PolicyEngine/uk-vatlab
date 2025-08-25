@@ -39,6 +39,13 @@ data/ons-business-statistics/*.xls
 data/ons-business-statistics/*.csv
 data/synthetic_firms.parquet
 
+# Large files
+*.pdf
+elasticity/*.pdf
+analysis/*.csv
+!analysis/sector_elasticities_hmrc.csv
+!analysis/bunching_temporal_analysis.csv
+
 # Python
 __pycache__/
 *.py[cod]
