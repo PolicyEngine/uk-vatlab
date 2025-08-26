@@ -1,0 +1,1325 @@
+{
+  "metadata": {
+    "source": "UK Input-Output Tables 2022",
+    "vat_rate": 0.2,
+    "method": "Proper IOT extraction with HFCE"
+  },
+  "industry_results": [
+    {
+      "SIC": "A02",
+      "Industry": "Forestry And Logging \u00a0",
+      "lambda": 0.08822471188615186,
+      "s_c": 0.47078604455653605,
+      "rho": 0.6647235468328839,
+      "v": 0.5412358133669608,
+      "tau_e": -0.04504531985289827,
+      "interpretation": "Voluntary registration",
+      "Sector": "A"
+    },
+    {
+      "SIC": "A03",
+      "Industry": "Fishing And Aquaculture \u00a0",
+      "lambda": 0.01656907896982306,
+      "s_c": 0.4137630662020906,
+      "rho": 0.6446901224141737,
+      "v": 0.5241289198606272,
+      "tau_e": -0.04219560630924904,
+      "interpretation": "Voluntary registration",
+      "Sector": "A"
+    },
+    {
+      "SIC": "B05",
+      "Industry": "Mining Of Coal And Lignite \u00a0",
+      "lambda": 0.5940773557493066,
+      "s_c": 0.7967479674796745,
+      "rho": 0.7984902678978287,
+      "v": 0.6390243902439023,
+      "tau_e": -0.07788580305835169,
+      "interpretation": "Voluntary registration",
+      "Sector": "B"
+    },
+    {
+      "SIC": "B06 & B07",
+      "Industry": "Extraction Of Crude Petroleum And Natural Gas \u00a0& Mining Of Metal Ores",
+      "lambda": 0.005384778440218989,
+      "s_c": 0.2000446347055124,
+      "rho": 0.621081419158595,
+      "v": 0.46001339041165373,
+      "tau_e": -0.01799656360796607,
+      "interpretation": "Voluntary registration",
+      "Sector": "B"
+    },
+    {
+      "SIC": "B08",
+      "Industry": "Other Mining And Quarrying \u00a0",
+      "lambda": 0.028070349884370186,
+      "s_c": 0.5748950682056663,
+      "rho": 0.6631035767974407,
+      "v": 0.5724685204616999,
+      "tau_e": -0.06393050572846744,
+      "interpretation": "Voluntary registration",
+      "Sector": "B"
+    },
+    {
+      "SIC": "B09",
+      "Industry": "Mining Support Service Activities \u00a0",
+      "lambda": 0.029402716544340735,
+      "s_c": 0.41222417496582686,
+      "rho": 0.6471029608054508,
+      "v": 0.5236672524897481,
+      "tau_e": -0.04109843390028667,
+      "interpretation": "Voluntary registration",
+      "Sector": "B"
+    },
+    {
+      "SIC": "C101",
+      "Industry": "Processing and preserving of meat and production of meat products",
+      "lambda": 0.2509214901988865,
+      "s_c": 0.7593755302901749,
+      "rho": 0.8261218510687948,
+      "v": 0.9259375530290175,
+      "tau_e": -0.13190091122083106,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C102_3",
+      "Industry": "Processing and preserving of fish, crustaceans, molluscs, fruit and vegetables",
+      "lambda": 0.23733942364368735,
+      "s_c": 0.695927096894179,
+      "rho": 0.8170605944181554,
+      "v": 0.9195927096894179,
+      "tau_e": -0.11931015033933887,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C104",
+      "Industry": "Manufacture of vegetable and animal oils and fats",
+      "lambda": 0.04110025997393889,
+      "s_c": 0.4741641337386017,
+      "rho": 0.7556364653686479,
+      "v": 0.8974164133738601,
+      "tau_e": -0.08309585428974403,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C105",
+      "Industry": "Manufacture of dairy products",
+      "lambda": 0.3132915247392912,
+      "s_c": 0.8248984692283666,
+      "rho": 0.8451481518706949,
+      "v": 0.9324898469228367,
+      "tau_e": -0.14413913513770296,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C106",
+      "Industry": "Manufacture of grain mill products, starches and starch products",
+      "lambda": 0.14795246451355284,
+      "s_c": 0.4309866962305988,
+      "rho": 0.7726891625257704,
+      "v": 0.8930986696230598,
+      "tau_e": -0.07025648928276675,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C107",
+      "Industry": "Manufacture of bakery and farinaceous products",
+      "lambda": 0.31700979449998107,
+      "s_c": 0.6003726129483002,
+      "rho": 0.8234392201948262,
+      "v": 0.91003726129483,
+      "tau_e": -0.09807799038421952,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C108",
+      "Industry": "Manufacture of other food products",
+      "lambda": 0.20238596588293528,
+      "s_c": 0.5740781052723234,
+      "rho": 0.7978850037038193,
+      "v": 0.9074078105272323,
+      "tau_e": -0.09600354356639051,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C109",
+      "Industry": "Manufacture of prepared animal feeds",
+      "lambda": 0.29696261483148656,
+      "s_c": 0.7112766205050627,
+      "rho": 0.8305201850168035,
+      "v": 0.9211276620505062,
+      "tau_e": -0.1209694802996894,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C1101T1106 & C12",
+      "Industry": "Manufacture of alcoholic beverages  & Tobacco Products",
+      "lambda": 0.12519282538881105,
+      "s_c": 0.5118800734727735,
+      "rho": 0.7762265724250396,
+      "v": 0.9011880073472773,
+      "tau_e": -0.08665707115373178,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C1107",
+      "Industry": "Manufacture of soft drinks; production of mineral waters and other bottled water",
+      "lambda": 0.29935130484987776,
+      "s_c": 0.6188537425618539,
+      "rho": 0.8217556352261608,
+      "v": 0.9118853742561853,
+      "tau_e": -0.10219319869373415,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C13",
+      "Industry": "Manufacture Of Textiles \u00a0",
+      "lambda": 0.2646126995928272,
+      "s_c": 0.3042809177392278,
+      "rho": 0.7833506316924882,
+      "v": 0.8804280917739228,
+      "tau_e": -0.04211385871108698,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C14",
+      "Industry": "Manufacture Of Wearing Apparel \u00a0",
+      "lambda": 0.02022255962218782,
+      "s_c": 0.43399014778325123,
+      "rho": 0.7474435267027626,
+      "v": 0.8933990147783251,
+      "tau_e": -0.07652380642276671,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C15",
+      "Industry": "Manufacture Of Leather And Related Products \u00a0",
+      "lambda": 0.029174917660126285,
+      "s_c": 0.4491150442477878,
+      "rho": 0.750746487956804,
+      "v": 0.8949115044247787,
+      "tau_e": -0.07892925384344628,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C16",
+      "Industry": "Manufacture Of Wood & Products Of Wood & Cork, Except Furniture; Manuf. Of Artic",
+      "lambda": 0.08330629316417977,
+      "s_c": 0.3069141449683322,
+      "rho": 0.7473526731296691,
+      "v": 0.8806914144968332,
+      "tau_e": -0.049849908036368094,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C17",
+      "Industry": "Manufacture Of Paper And Paper Products \u00a0",
+      "lambda": 0.07956865017794537,
+      "s_c": 0.4377482947305299,
+      "rho": 0.759688559508642,
+      "v": 0.893774829473053,
+      "tau_e": -0.07442543010653682,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C18",
+      "Industry": "Printing And Reproduction Of Recorded Media \u00a0",
+      "lambda": 0.08001676759543176,
+      "s_c": 0.3789233403081604,
+      "rho": 0.7538956875499023,
+      "v": 0.887892334030816,
+      "tau_e": -0.06335013149428256,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C19",
+      "Industry": "Manufacture Of Coke And Refined Petroleum Products \u00a0",
+      "lambda": 0.16754669122270302,
+      "s_c": 0.10521231282659292,
+      "rho": 0.7440305695271998,
+      "v": 0.8605212312826592,
+      "tau_e": -0.009530119569951732,
+      "interpretation": "Neutral",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C203",
+      "Industry": "Manufacture of paints, varnishes and similar coatings, printing ink and mastics",
+      "lambda": 0.01751959585874543,
+      "s_c": 0.34391534391534406,
+      "rho": 0.7378954535632835,
+      "v": 0.8843915343915344,
+      "tau_e": -0.05991277059595448,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C204",
+      "Industry": "Manufacture of soap & detergents, cleaning & polishing, perfumes & toilet prepar",
+      "lambda": 0.24407801326242926,
+      "s_c": 0.34779232305302865,
+      "rho": 0.7835948349577887,
+      "v": 0.8847792323053029,
+      "tau_e": -0.05097993636986111,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C205",
+      "Industry": "Manufacture of other chemical products",
+      "lambda": 0.03161322579717769,
+      "s_c": 0.2876210416121433,
+      "rho": 0.7350847493206498,
+      "v": 0.8787621041612144,
+      "tau_e": -0.048875129218257006,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C20A",
+      "Industry": "Manufacture of industrial gases, inorganics and fertilisers (inorganic chemicals",
+      "lambda": 0.07197233945056723,
+      "s_c": 0.3880308880308882,
+      "rho": 0.7531975566932022,
+      "v": 0.8888030888030888,
+      "tau_e": -0.06542402052119055,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C20B",
+      "Industry": "Manufacture of petrochemicals - 20.14/16/17/60",
+      "lambda": 0.015842676365368753,
+      "s_c": 0.3952391646081293,
+      "rho": 0.7426924517338866,
+      "v": 0.8895239164608129,
+      "tau_e": -0.06949964988547531,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C20C",
+      "Industry": "Manufacture of dyestuffs, agro-chemicals - 20.12/20",
+      "lambda": 0.010195160842137507,
+      "s_c": 0.41619991383024557,
+      "rho": 0.743659023551452,
+      "v": 0.8916199913830245,
+      "tau_e": -0.07369574521952311,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C21",
+      "Industry": "Manufacture Of Basic Pharmaceutical Products And Pharmaceutical Preparations",
+      "lambda": 0.016325900626492033,
+      "s_c": 0.42660205530954964,
+      "rho": 0.7459253856562533,
+      "v": 0.8926602055309549,
+      "tau_e": -0.07533253629341202,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C22",
+      "Industry": "Manufacture Of Rubber And Plastic Products \u00a0",
+      "lambda": 0.027211729166797684,
+      "s_c": 0.34636587842739,
+      "rho": 0.7400789336760986,
+      "v": 0.884636587842739,
+      "tau_e": -0.0598670054351216,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C235_6",
+      "Industry": "Manufacture of cement, lime, plaster and articles of concrete, cement and plaste",
+      "lambda": 0.016084419908824928,
+      "s_c": 0.4797347777362718,
+      "rho": 0.7511903617553921,
+      "v": 0.8979734777736271,
+      "tau_e": -0.0853574296147818,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C23OTHER",
+      "Industry": "Manufacture of glass, refractory, clay, porcelain, ceramic, stone products - 23.",
+      "lambda": 0.031018853751726614,
+      "s_c": 0.4866278378699633,
+      "rho": 0.7548665545373415,
+      "v": 0.8986627837869963,
+      "tau_e": -0.08594211379080105,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C241T243",
+      "Industry": "Manufacture of basic iron and steel",
+      "lambda": 0.03591574462920055,
+      "s_c": 0.4551265440096744,
+      "rho": 0.7526958033268075,
+      "v": 0.8955126544009674,
+      "tau_e": -0.07973789302819966,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C244_5",
+      "Industry": "Manufacture of other basic metals and casting",
+      "lambda": 0.022982586739956994,
+      "s_c": 0.2951249827371911,
+      "rho": 0.7341090156217105,
+      "v": 0.8795124982737191,
+      "tau_e": -0.05069104965166573,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C254",
+      "Industry": "Manufacture of weapons and ammunition",
+      "lambda": 0.020130693578381972,
+      "s_c": 0.6105898123324398,
+      "rho": 0.7650851199489203,
+      "v": 0.9110589812332439,
+      "tau_e": -0.11031086658153591,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C25OTHER",
+      "Industry": "Manufacture of fabricated metal products, excluding weapons & ammunition - 25.1-",
+      "lambda": 0.07685317326677531,
+      "s_c": 0.3149690489589195,
+      "rho": 0.746867539549247,
+      "v": 0.8814969048958919,
+      "tau_e": -0.051638041790564665,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C26",
+      "Industry": "Manufacture Of Computer, Electronic And Optical Products \u00a0",
+      "lambda": 0.049645061001109214,
+      "s_c": 0.30438753226126647,
+      "rho": 0.7403677654263484,
+      "v": 0.8804387532261266,
+      "tau_e": -0.05102102425568472,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C27",
+      "Industry": "Manufacture Of Electrical Equipment \u00a0",
+      "lambda": 0.10487548143153108,
+      "s_c": 0.3656989669151302,
+      "rho": 0.7575449929778192,
+      "v": 0.886569896691513,
+      "tau_e": -0.05975802194624072,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C28",
+      "Industry": "Manufacture Of Machinery And Equipment N.E.C. \u00a0",
+      "lambda": 0.05410938950801191,
+      "s_c": 0.3568243292638352,
+      "rho": 0.7465043108279859,
+      "v": 0.8856824329263835,
+      "tau_e": -0.060463308617141616,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C29",
+      "Industry": "Manufacture Of Motor Vehicles, Trailers And Semi-Trailers \u00a0",
+      "lambda": 0.04384501285422054,
+      "s_c": 0.4822209024319674,
+      "rho": 0.7569910928140409,
+      "v": 0.8982220902431968,
+      "tau_e": -0.08449734765642879,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C301",
+      "Industry": "Building of ships and boats",
+      "lambda": 0.028596899986392463,
+      "s_c": 0.5709695709695708,
+      "rho": 0.7628163370942355,
+      "v": 0.907096957096957,
+      "tau_e": -0.10222840858698608,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C303",
+      "Industry": "Manufacture of air and spacecraft and related machinery",
+      "lambda": 0.015091860012700084,
+      "s_c": 0.4266871165644172,
+      "rho": 0.7456870836589817,
+      "v": 0.8926687116564417,
+      "tau_e": -0.07541043673822402,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C30OTHER",
+      "Industry": "Manufacture of other transport equipment - 30.2/4/9",
+      "lambda": 0.04822787423492996,
+      "s_c": 0.4268790849673202,
+      "rho": 0.752333483343718,
+      "v": 0.892687908496732,
+      "tau_e": -0.07382507358459468,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C31",
+      "Industry": "Manufacture Of Furniture \u00a0",
+      "lambda": 0.24376699463352183,
+      "s_c": 0.3890459734003561,
+      "rho": 0.7876579962667399,
+      "v": 0.8889045973400356,
+      "tau_e": -0.058812556449537784,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C32",
+      "Industry": "Other Manufacturing \u00a0",
+      "lambda": 0.11444495917202858,
+      "s_c": 0.45280649926144767,
+      "rho": 0.7681696417605505,
+      "v": 0.8952806499261448,
+      "tau_e": -0.07577141621320414,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C3315",
+      "Industry": "Repair and maintenance of ships and boats",
+      "lambda": 0.10996965170085417,
+      "s_c": 0.3870967741935483,
+      "rho": 0.7607036077595256,
+      "v": 0.8887096774193548,
+      "tau_e": -0.06354026168313304,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C3316",
+      "Industry": "Repair and maintenance of aircraft and spacecraft",
+      "lambda": 0.038574465153271904,
+      "s_c": 0.16040738383195413,
+      "rho": 0.7237556314138498,
+      "v": 0.8660407383831954,
+      "tau_e": -0.025652670073225633,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "C33OTHER",
+      "Industry": "Rest of repair; Installation - 33.11-14/17/19/20",
+      "lambda": 0.023672914340408573,
+      "s_c": 0.4619627362615189,
+      "rho": 0.7509308564942335,
+      "v": 0.8961962736261518,
+      "tau_e": -0.0816226180585326,
+      "interpretation": "Voluntary registration",
+      "Sector": "C"
+    },
+    {
+      "SIC": "D351",
+      "Industry": "Electric power generation, transmission and distribution",
+      "lambda": 0.15731213516086645,
+      "s_c": 0.7121647509578543,
+      "rho": 0.8026789021279587,
+      "v": 0.9212164750957854,
+      "tau_e": -0.12500337966926506,
+      "interpretation": "Voluntary registration",
+      "Sector": "D"
+    },
+    {
+      "SIC": "D352_3",
+      "Industry": "Manufacture of gas; distribution of gaseous fuels through mains; steam and airco",
+      "lambda": 0.16142951336035422,
+      "s_c": 0.6720591789061036,
+      "rho": 0.7994918205626812,
+      "v": 0.9172059178906103,
+      "tau_e": -0.11680974364680913,
+      "interpretation": "Voluntary registration",
+      "Sector": "D"
+    },
+    {
+      "SIC": "E36",
+      "Industry": "Water Collection, Treatment And Supply \u00a0",
+      "lambda": 0.29498124293938766,
+      "s_c": 0.30062082139446034,
+      "rho": 0.7890583307273236,
+      "v": 0.880062082139446,
+      "tau_e": -0.040468230044223195,
+      "interpretation": "Voluntary registration",
+      "Sector": "E"
+    },
+    {
+      "SIC": "E37",
+      "Industry": "Sewerage \u00a0",
+      "lambda": 0.31732265474004356,
+      "s_c": 0.20837542474056384,
+      "rho": 0.784302073422065,
+      "v": 0.8708375424740563,
+      "tau_e": -0.022603060821885394,
+      "interpretation": "Voluntary registration",
+      "Sector": "E"
+    },
+    {
+      "SIC": "E38",
+      "Industry": "Waste Collection, Treatment And Disposal Activities; Materials Recovery \u00a0",
+      "lambda": 0.02769269208740701,
+      "s_c": 0.4632479812271379,
+      "rho": 0.7518633365401952,
+      "v": 0.8963247981227138,
+      "tau_e": -0.08166981620747604,
+      "interpretation": "Voluntary registration",
+      "Sector": "E"
+    },
+    {
+      "SIC": "E39",
+      "Industry": "Remediation Activities And Other Waste Management Services \u00a0",
+      "lambda": 0.01637448891546576,
+      "s_c": 0.44213886671987224,
+      "rho": 0.7474887844550804,
+      "v": 0.8942138866719872,
+      "tau_e": -0.07824639447167073,
+      "interpretation": "Voluntary registration",
+      "Sector": "E"
+    },
+    {
+      "SIC": "F41, F42  & F43",
+      "Industry": "Construction",
+      "lambda": 0.01730683558342594,
+      "s_c": 0.5895151426450757,
+      "rho": 0.6624128813811927,
+      "v": 0.8089515142645076,
+      "tau_e": -0.09420932051351459,
+      "interpretation": "Voluntary registration",
+      "Sector": "F"
+    },
+    {
+      "SIC": "G45",
+      "Industry": "Wholesale And Retail Trade And Repair Of Motor Vehicles And Motorcycles \u00a0",
+      "lambda": 0.3032206685580829,
+      "s_c": 0.403243573014286,
+      "rho": 0.9509684910130451,
+      "v": 0.8403243573014286,
+      "tau_e": -0.06479760587874511,
+      "interpretation": "Voluntary registration",
+      "Sector": "G"
+    },
+    {
+      "SIC": "G46",
+      "Industry": "Wholesale Trade, Except Of Motor Vehicles And Motorcycles \u00a0",
+      "lambda": 0.09838136467169901,
+      "s_c": 0.3947979119724442,
+      "rho": 0.9091560641315842,
+      "v": 0.8394797911972445,
+      "tau_e": -0.0644975036649705,
+      "interpretation": "Voluntary registration",
+      "Sector": "G"
+    },
+    {
+      "SIC": "G47",
+      "Industry": "Retail Trade, Except Of Motor Vehicles And Motorcycles \u00a0",
+      "lambda": 0.4406056078557209,
+      "s_c": 0.38143369408603905,
+      "rho": 0.976264490979748,
+      "v": 0.838143369408604,
+      "tau_e": -0.06184762463752208,
+      "interpretation": "Voluntary registration",
+      "Sector": "G"
+    },
+    {
+      "SIC": "H491_2",
+      "Industry": "Rail transport",
+      "lambda": 0.37735803296612536,
+      "s_c": 0.7647970050990771,
+      "rho": 0.7519513071031327,
+      "v": 0.7147195507648616,
+      "tau_e": -0.09060244101586873,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "H493T495",
+      "Industry": "Land transport services and transport services via pipelines, excluding rail tra",
+      "lambda": 0.14361015673577326,
+      "s_c": 0.4278290790351461,
+      "rho": 0.6715049392506692,
+      "v": 0.6641743618552719,
+      "tau_e": -0.047395575678031626,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "H50",
+      "Industry": "Water Transport \u00a0",
+      "lambda": 0.26214713736700923,
+      "s_c": 0.5474190406622838,
+      "rho": 0.7071713315396302,
+      "v": 0.6821128560993426,
+      "tau_e": -0.05932747362668672,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "H51",
+      "Industry": "Air Transport \u00a0",
+      "lambda": 0.022945771662038664,
+      "s_c": 0.29219006007646087,
+      "rho": 0.6338081603400537,
+      "v": 0.6438285090114692,
+      "tau_e": -0.03594354727793208,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "H52",
+      "Industry": "Warehousing And Support Activities For Transportation \u00a0",
+      "lambda": 0.05832950719182121,
+      "s_c": 0.4377484894969163,
+      "rho": 0.6554407503880558,
+      "v": 0.6656622734245374,
+      "tau_e": -0.05425893669568523,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "H53",
+      "Industry": "Postal And Courier Activities \u00a0",
+      "lambda": 0.03935352065035944,
+      "s_c": 0.42611910252186963,
+      "rho": 0.6504826143822589,
+      "v": 0.6639178653782805,
+      "tau_e": -0.05383066905813219,
+      "interpretation": "Voluntary registration",
+      "Sector": "H"
+    },
+    {
+      "SIC": "I55",
+      "Industry": "Accommodation \u00a0",
+      "lambda": 0.3156204626226203,
+      "s_c": 0.4133818304855355,
+      "rho": 0.40446227557307757,
+      "v": 0.5240145491456607,
+      "tau_e": -0.005730840286807606,
+      "interpretation": "Neutral",
+      "Sector": "I"
+    },
+    {
+      "SIC": "I56",
+      "Industry": "Food And Beverage Service Activities \u00a0",
+      "lambda": 0.45219331449873457,
+      "s_c": 0.4244122221205741,
+      "rho": 0.43287988511180436,
+      "v": 0.5273236666361723,
+      "tau_e": 0.006529063067273931,
+      "interpretation": "Neutral",
+      "Sector": "I"
+    },
+    {
+      "SIC": "J58",
+      "Industry": "Publishing Activities \u00a0",
+      "lambda": 0.08272633463668745,
+      "s_c": 0.3870410367170626,
+      "rho": 0.6552493705990438,
+      "v": 0.6580561555075594,
+      "tau_e": -0.045234956142331646,
+      "interpretation": "Voluntary registration",
+      "Sector": "J"
+    },
+    {
+      "SIC": "J59 & J60",
+      "Industry": "Motion Picture, Video & TV Programme Production, Sound Recording & Music Publish",
+      "lambda": 0.17429474010005364,
+      "s_c": 0.44353569761209,
+      "rho": 0.6792125177812197,
+      "v": 0.6665303546418134,
+      "tau_e": -0.04794368699700352,
+      "interpretation": "Voluntary registration",
+      "Sector": "J"
+    },
+    {
+      "SIC": "J61",
+      "Industry": "Telecommunications \u00a0",
+      "lambda": 0.26286839433738685,
+      "s_c": 0.3473173371210199,
+      "rho": 0.6873054125795793,
+      "v": 0.6520976005681529,
+      "tau_e": -0.028857455611827953,
+      "interpretation": "Voluntary registration",
+      "Sector": "J"
+    },
+    {
+      "SIC": "J62",
+      "Industry": "Computer Programming, Consultancy And Related Activities \u00a0",
+      "lambda": 0.030936253386443874,
+      "s_c": 0.3772805923302885,
+      "rho": 0.6439153099103176,
+      "v": 0.6565920888495432,
+      "tau_e": -0.04734070520017787,
+      "interpretation": "Voluntary registration",
+      "Sector": "J"
+    },
+    {
+      "SIC": "J63",
+      "Industry": "Information Service Activities \u00a0",
+      "lambda": 0.018748270991216558,
+      "s_c": 0.4157505285412263,
+      "rho": 0.645324707052366,
+      "v": 0.6623625792811839,
+      "tau_e": -0.053745608783202156,
+      "interpretation": "Voluntary registration",
+      "Sector": "J"
+    },
+    {
+      "SIC": "K64",
+      "Industry": "Financial Service Activities, Except Insurance And Pension Funding \u00a0",
+      "lambda": 0.20627526555077305,
+      "s_c": 0.30898532847592813,
+      "rho": 0.3221535859577474,
+      "v": 0.3617970656951856,
+      "tau_e": 0.005606592774750209,
+      "interpretation": "Neutral",
+      "Sector": "K"
+    },
+    {
+      "SIC": "K65.1-2 & K65.3",
+      "Industry": "Insurance, reinsurance and pension funding services, except compulsory social se",
+      "lambda": 0.322571396630989,
+      "s_c": 0.33432630327304574,
+      "rho": 0.3479469096535024,
+      "v": 0.3668652606546091,
+      "tau_e": 0.017536193927332872,
+      "interpretation": "Bunching (avoid VAT)",
+      "Sector": "K"
+    },
+    {
+      "SIC": "K66",
+      "Industry": "Activities Auxiliary To Financial Services And Insurance Activities \u00a0",
+      "lambda": 0.10096738905453313,
+      "s_c": 0.30551181102362207,
+      "rho": 0.30074465891326885,
+      "v": 0.3611023622047244,
+      "tau_e": -0.007943810114021808,
+      "interpretation": "Neutral",
+      "Sector": "K"
+    },
+    {
+      "SIC": "L683",
+      "Industry": "Real estate services on a fee or contract basis \u00a0",
+      "lambda": 0.08278988353156105,
+      "s_c": 0.37053291536050176,
+      "rho": 0.6536112682423624,
+      "v": 0.5111598746081505,
+      "tau_e": -0.03214481515900132,
+      "interpretation": "Voluntary registration",
+      "Sector": "L"
+    },
+    {
+      "SIC": "L68A",
+      "Industry": "Owner-Occupiers' Housing",
+      "lambda": 0.4992868366461494,
+      "s_c": 0.1060918957816166,
+      "rho": 0.7104665569073916,
+      "v": 0.431827568734485,
+      "tau_e": 0.019749366297433704,
+      "interpretation": "Bunching (avoid VAT)",
+      "Sector": "L"
+    },
+    {
+      "SIC": "L68BXL683",
+      "Industry": "Buying and selling, renting and operating of own or leased real estate, excludin",
+      "lambda": 0.3866576494221449,
+      "s_c": 0.3334997197702116,
+      "rho": 0.7106815018614501,
+      "v": 0.5000499159310635,
+      "tau_e": -0.010979859281906125,
+      "interpretation": "Voluntary registration",
+      "Sector": "L"
+    },
+    {
+      "SIC": "M691",
+      "Industry": "Legal activities \u00a0",
+      "lambda": 0.037897405920922465,
+      "s_c": 0.20295097152687416,
+      "rho": 0.4278745783368719,
+      "v": 0.5405901943053748,
+      "tau_e": -0.0176062471579462,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M692",
+      "Industry": "Accounting, bookkeeping and auditing activities; tax consultancy \u00a0",
+      "lambda": 0.004238958858659907,
+      "s_c": 0.16745277255064878,
+      "rho": 0.4175930690267969,
+      "v": 0.5334905545101297,
+      "tau_e": -0.01737313469258209,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M70",
+      "Industry": "Activities Of Head Offices; Management Consultancy Activities \u00a0",
+      "lambda": 0.019769695530659038,
+      "s_c": 0.3816957679786919,
+      "rho": 0.442123515904001,
+      "v": 0.5763391535957384,
+      "tau_e": -0.04179143352272445,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M71",
+      "Industry": "Architectural And Engineering Activities; Technical Testing And Analysis \u00a0",
+      "lambda": 0.0251008992070383,
+      "s_c": 0.4620456618273701,
+      "rho": 0.4512247460241447,
+      "v": 0.592409132365474,
+      "tau_e": -0.05198906345980376,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M72",
+      "Industry": "Scientific Research And Development \u00a0",
+      "lambda": 0.07821071917003676,
+      "s_c": 0.5124363990188726,
+      "rho": 0.4668857837358946,
+      "v": 0.6024872798037746,
+      "tau_e": -0.05340823317270721,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M73",
+      "Industry": "Advertising And Market Research \u00a0",
+      "lambda": 0.015374810316266523,
+      "s_c": 0.27230164492626624,
+      "rho": 0.43030512655587994,
+      "v": 0.5544603289852532,
+      "tau_e": -0.028444301802338076,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M74",
+      "Industry": "Other Professional, Scientific And Technical Activities \u00a0",
+      "lambda": 0.042760987156214965,
+      "s_c": 0.5336988304093566,
+      "rho": 0.46192208047217864,
+      "v": 0.6067397660818713,
+      "tau_e": -0.06016151210295386,
+      "interpretation": "Voluntary registration",
+      "Sector": "M"
+    },
+    {
+      "SIC": "M75",
+      "Industry": "Veterinary Activities \u00a0",
+      "lambda": 0.46903224922224745,
+      "s_c": 0.22952667167543198,
+      "rho": 0.5167591170119927,
+      "v": 0.5459053343350864,
+      "tau_e": 0.020271144764842736,
+      "interpretation": "Bunching (avoid VAT)",
+      "Sector": "M"
+    },
+    {
+      "SIC": "N77",
+      "Industry": "Rental And Leasing Activities \u00a0",
+      "lambda": 0.23389916148547965,
+      "s_c": 0.3192646876164452,
+      "rho": 0.47870630105874046,
+      "v": 0.563852937523289,
+      "tau_e": -0.011617634577992642,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "N78",
+      "Industry": "Employment Activities \u00a0",
+      "lambda": 0.011387316082392327,
+      "s_c": 0.4154325941056317,
+      "rho": 0.4438207226270417,
+      "v": 0.5830865188211264,
+      "tau_e": -0.047179951174392075,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "N79",
+      "Industry": "Travel Agency, Tour Operator And Other Reservation Service And Related Activitie",
+      "lambda": 0.41111570580281775,
+      "s_c": 0.5784865293185419,
+      "rho": 0.5400717940924178,
+      "v": 0.6156973058637084,
+      "tau_e": -0.03341777771791082,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "N80",
+      "Industry": "Security And Investigation Activities \u00a0",
+      "lambda": 0.029682849746578716,
+      "s_c": 0.46735751295336775,
+      "rho": 0.4526723212446525,
+      "v": 0.5934715025906736,
+      "tau_e": -0.05222342404176734,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "N81",
+      "Industry": "Services To Buildings And Landscape Activities \u00a0",
+      "lambda": 0.0736646901515763,
+      "s_c": 0.5288862786312633,
+      "rho": 0.4676215658934416,
+      "v": 0.6057772557262526,
+      "tau_e": -0.056233957213735176,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "N82",
+      "Industry": "Office Administrative, Office Support And Other Business Support Activities \u00a0",
+      "lambda": 0.03878418953781501,
+      "s_c": 0.3699220693085724,
+      "rho": 0.44474904483842026,
+      "v": 0.5739844138617145,
+      "tau_e": -0.03815890876811079,
+      "interpretation": "Voluntary registration",
+      "Sector": "N"
+    },
+    {
+      "SIC": "O84",
+      "Industry": "Public Administration And Defence; Compulsory Social Security \u00a0",
+      "lambda": 0.007360870717231178,
+      "s_c": 0.33950130026102093,
+      "rho": 0.6354223041695484,
+      "v": 0.5018503900783063,
+      "tau_e": -0.033539050136538316,
+      "interpretation": "Voluntary registration",
+      "Sector": "O"
+    },
+    {
+      "SIC": "P85",
+      "Industry": "Education \u00a0",
+      "lambda": 0.1791375693761063,
+      "s_c": 0.24657024353929596,
+      "rho": 0.6604845382291508,
+      "v": 0.28698553653089437,
+      "tau_e": -0.001988423809488375,
+      "interpretation": "Neutral",
+      "Sector": "P"
+    },
+    {
+      "SIC": "Q86",
+      "Industry": "Human Health Activities",
+      "lambda": 0.04162513595261496,
+      "s_c": 0.30058442372062216,
+      "rho": 0.6383834695625852,
+      "v": 0.29508766355809335,
+      "tau_e": -0.014729283611100805,
+      "interpretation": "Voluntary registration",
+      "Sector": "Q"
+    },
+    {
+      "SIC": "Q87 & Q88",
+      "Industry": "Residential Care  & Social Work Activities",
+      "lambda": 0.18063237787871714,
+      "s_c": 0.33308203841436645,
+      "rho": 0.66943467941718,
+      "v": 0.299962305762155,
+      "tau_e": -0.008040251269923367,
+      "interpretation": "Neutral",
+      "Sector": "Q"
+    },
+    {
+      "SIC": "R90",
+      "Industry": "Creative, Arts And Entertainment Activities \u00a0",
+      "lambda": 0.32797710532899527,
+      "s_c": 0.38137858163962945,
+      "rho": 0.703733279229762,
+      "v": 0.5144135744918888,
+      "tau_e": -0.019803523586470417,
+      "interpretation": "Voluntary registration",
+      "Sector": "R"
+    },
+    {
+      "SIC": "R91",
+      "Industry": "Libraries, Archives, Museums And Other Cultural Activities \u00a0",
+      "lambda": 0.040601817708241186,
+      "s_c": 0.37948381452318464,
+      "rho": 0.6460687449939667,
+      "v": 0.5138451443569554,
+      "tau_e": -0.036125132631557984,
+      "interpretation": "Voluntary registration",
+      "Sector": "R"
+    },
+    {
+      "SIC": "R92",
+      "Industry": "Gambling And Betting Activities \u00a0",
+      "lambda": 0.4033585607301321,
+      "s_c": 0.4816739352324395,
+      "rho": 0.7288391056692703,
+      "v": 0.5445021805697319,
+      "tau_e": -0.03057948799882571,
+      "interpretation": "Voluntary registration",
+      "Sector": "R"
+    },
+    {
+      "SIC": "R93",
+      "Industry": "Sports Activities And Amusement And Recreation Activities \u00a0",
+      "lambda": 0.37940504896409866,
+      "s_c": 0.38092257850752853,
+      "rho": 0.7139732676435726,
+      "v": 0.5142767735522585,
+      "tau_e": -0.01747592965066544,
+      "interpretation": "Voluntary registration",
+      "Sector": "R"
+    },
+    {
+      "SIC": "S94",
+      "Industry": "Activities Of Membership Organisations \u00a0",
+      "lambda": 0.4410489092156174,
+      "s_c": 0.4187347931873479,
+      "rho": 0.7300832611618582,
+      "v": 0.5256204379562044,
+      "tau_e": -0.020209816427807076,
+      "interpretation": "Voluntary registration",
+      "Sector": "S"
+    },
+    {
+      "SIC": "S95",
+      "Industry": "Repair Of Computers And Personal And Household Goods \u00a0",
+      "lambda": 0.24932195077544908,
+      "s_c": 0.3480264476056903,
+      "rho": 0.6846670349156588,
+      "v": 0.5044079342817072,
+      "tau_e": -0.01938557430271051,
+      "interpretation": "Voluntary registration",
+      "Sector": "S"
+    },
+    {
+      "SIC": "S96",
+      "Industry": "Other Personal Service Activities \u00a0",
+      "lambda": 0.45555849757123545,
+      "s_c": 0.19813542372334586,
+      "rho": 0.7109252418865817,
+      "v": 0.4594406271170038,
+      "tau_e": 0.008131799832473974,
+      "interpretation": "Neutral",
+      "Sector": "S"
+    },
+    {
+      "SIC": "T97",
+      "Industry": "Activities Of Households As Employers Of Domestic Personnel \u00a0",
+      "lambda": 0.49664284167208145,
+      "s_c": 0.0,
+      "rho": 0.6993285683344163,
+      "v": 0.4,
+      "tau_e": 0.029865262846401716,
+      "interpretation": "Bunching (avoid VAT)",
+      "Sector": "T"
+    }
+  ],
+  "sector_averages": {
+    "A": {
+      "lambda": 0.0524,
+      "s_c": 0.4423,
+      "rho": 0.6547,
+      "v": 0.5327,
+      "tau_e": -0.0436
+    },
+    "B": {
+      "lambda": 0.1642,
+      "s_c": 0.496,
+      "rho": 0.6824,
+      "v": 0.5488,
+      "tau_e": -0.0502
+    },
+    "C": {
+      "lambda": 0.1039,
+      "s_c": 0.4418,
+      "rho": 0.765,
+      "v": 0.8942,
+      "tau_e": -0.0751
+    },
+    "D": {
+      "lambda": 0.1594,
+      "s_c": 0.6921,
+      "rho": 0.8011,
+      "v": 0.9192,
+      "tau_e": -0.1209
+    },
+    "E": {
+      "lambda": 0.1641,
+      "s_c": 0.3536,
+      "rho": 0.7682,
+      "v": 0.8854,
+      "tau_e": -0.0557
+    },
+    "F": {
+      "lambda": 0.0173,
+      "s_c": 0.5895,
+      "rho": 0.6624,
+      "v": 0.809,
+      "tau_e": -0.0942
+    },
+    "G": {
+      "lambda": 0.2807,
+      "s_c": 0.3932,
+      "rho": 0.9455,
+      "v": 0.8393,
+      "tau_e": -0.0637
+    },
+    "H": {
+      "lambda": 0.1506,
+      "s_c": 0.4827,
+      "rho": 0.6784,
+      "v": 0.6724,
+      "tau_e": -0.0569
+    },
+    "I": {
+      "lambda": 0.3839,
+      "s_c": 0.4189,
+      "rho": 0.4187,
+      "v": 0.5257,
+      "tau_e": 0.0004
+    },
+    "J": {
+      "lambda": 0.1139,
+      "s_c": 0.3942,
+      "rho": 0.6622,
+      "v": 0.6591,
+      "tau_e": -0.0446
+    },
+    "K": {
+      "lambda": 0.2099,
+      "s_c": 0.3163,
+      "rho": 0.3236,
+      "v": 0.3633,
+      "tau_e": 0.0051
+    },
+    "L": {
+      "lambda": 0.3229,
+      "s_c": 0.27,
+      "rho": 0.6916,
+      "v": 0.481,
+      "tau_e": -0.0078
+    },
+    "M": {
+      "lambda": 0.0865,
+      "s_c": 0.3453,
+      "rho": 0.4518,
+      "v": 0.5691,
+      "tau_e": -0.0313
+    },
+    "N": {
+      "lambda": 0.1331,
+      "s_c": 0.4466,
+      "rho": 0.4713,
+      "v": 0.5893,
+      "tau_e": -0.0398
+    },
+    "O": {
+      "lambda": 0.0074,
+      "s_c": 0.3395,
+      "rho": 0.6354,
+      "v": 0.5019,
+      "tau_e": -0.0335
+    },
+    "P": {
+      "lambda": 0.1791,
+      "s_c": 0.2466,
+      "rho": 0.6605,
+      "v": 0.287,
+      "tau_e": -0.002
+    },
+    "Q": {
+      "lambda": 0.1111,
+      "s_c": 0.3168,
+      "rho": 0.6539,
+      "v": 0.2975,
+      "tau_e": -0.0114
+    },
+    "R": {
+      "lambda": 0.2878,
+      "s_c": 0.4059,
+      "rho": 0.6982,
+      "v": 0.5218,
+      "tau_e": -0.026
+    },
+    "S": {
+      "lambda": 0.382,
+      "s_c": 0.3216,
+      "rho": 0.7086,
+      "v": 0.4965,
+      "tau_e": -0.0105
+    },
+    "T": {
+      "lambda": 0.4966,
+      "s_c": 0.0,
+      "rho": 0.6993,
+      "v": 0.4,
+      "tau_e": 0.0299
+    }
+  },
+  "validation": [
+    {
+      "Sector": "Retail",
+      "SIC": "G47",
+      "tau_e": -0.06184762463752208,
+      "Expected": "should have negative wedge (high inputs)",
+      "Passed": "\u2713"
+    },
+    {
+      "Sector": "Manufacturing",
+      "SIC": "C",
+      "tau_e": -0.13190091122083106,
+      "Expected": "should have negative wedge (high inputs)",
+      "Passed": "\u2713"
+    },
+    {
+      "Sector": "Food service",
+      "SIC": "I56",
+      "tau_e": 0.006529063067273931,
+      "Expected": "could be positive (high B2C, low pass-through)",
+      "Passed": "\u2713"
+    },
+    {
+      "Sector": "Financial",
+      "SIC": "K64",
+      "tau_e": 0.005606592774750209,
+      "Expected": "could be positive (low reclaim)",
+      "Passed": "\u2713"
+    }
+  ]
+}

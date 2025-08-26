@@ -42,6 +42,7 @@ data/synthetic_firms.parquet
 # Large files
 *.pdf
 elasticity/*.pdf
+elasticity/*.xlsx
 analysis/*.csv
 !analysis/sector_elasticities_hmrc.csv
 !analysis/bunching_temporal_analysis.csv
