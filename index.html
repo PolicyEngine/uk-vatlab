@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAT Bunching Analysis</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 25px;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85em;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .formula-block {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        blockquote {
+            border-left: 4px solid #95a5a6;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VAT Bunching Analysis</h1>
+
+        <h2>Overview</h2>
+        <p>This repository implements a comprehensive VAT (Value Added Tax) bunching analysis methodology for analyzing firm responses to VAT registration thresholds, following the approach developed by Liu & Lockwood (2015). The analysis follows the theoretical framework established in the bunching literature and implements a complete pipeline from counterfactual estimation through policy simulation.</p>
+
+        <h2>Background</h2>
+        <p>VAT registration thresholds create economic incentives for firms to "bunch" just below the threshold to avoid mandatory registration. This bunching behavior provides insights into:</p>
+        <ul>
+            <li><strong>Behavioral elasticities</strong>: How responsive firms are to tax incentives</li>
+            <li><strong>Policy effectiveness</strong>: The impact of threshold changes on firm behavior and revenue</li>
+        </ul>
+
+        <h3>Theoretical Foundation</h3>
+        <p>The VAT registration threshold at the cutoff turnover value $y^*$ induces excess bunching by companies for which voluntary registration is not optimal. The bunching is driven by the productivity parameter and generates an excess mass by companies who would have reported turnover between $y^*$ and $y^* + \Delta y^*$ absent the notch:</p>
+
+        <div class="formula-block">
+            <strong>Excess bunching formula:</strong>
+            <p>$$B(y^*) = \int_{y^*}^{y^*+\Delta y^*} g(y)dy \approx g(y^*)\Delta y^*$$</p>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li>$B(y^*)$ = excess mass at the threshold</li>
+            <li>$g(y)$ = counterfactual density distribution of turnover without registration threshold</li>
+            <li>The approximation is accurate when $g(y)$ is uniform around the notch</li>
+        </ul>
+
+        <h3>Empirical Estimation Framework</h3>
+        <p>Following Liu & Lockwood (2015), by grouping companies into small turnover bins of £100, we estimate the counterfactual distribution around the VAT notch $y^*$ using the polynomial regression:</p>
+
+        <div class="formula-block">
+            <strong>Counterfactual regression:</strong>
+            <p>$$c_j = \sum_{l=0}^{q} \beta_l(y_j)^l + \sum_{i=y^*-}^{y^*+} \gamma_i I\{j = i\} + \varepsilon_j$$</p>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li>$c_j$ = number of companies in turnover bin $j$</li>
+            <li>$y_j$ = distance between turnover bin $j$ and the VAT notch $y^*$</li>
+            <li>$q$ = order of the polynomial</li>
+            <li>$I\{\cdot\}$ = indicator function</li>
+            <li>$[y^*-, y^*+]$ = turnover bins around notch excluded from regression</li>
+        </ul>
+
+        <div class="formula-block">
+            <strong>Excess bunching estimation:</strong>
+            <p>$$\hat{B} = \sum_{i=y^*-}^{y^*} (c_j - \hat{c}_j)$$</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Bunching ratio:</strong>
+            <p>$$b(y^*) = \frac{B(y^*)}{g(y^*)} \approx \frac{\Delta y^*}{y^*}$$</p>
+        </div>
+
+        <p>This ratio denotes the fraction of companies that bunch at the notch relative to the counterfactual density and approximates the relative response under no optimization frictions.</p>
+
+        <p>The methodology implemented here builds on the seminal work in the bunching literature, particularly:</p>
+        <ul>
+            <li><strong>Saez (2010)</strong>: Foundational bunching estimation methodology for kinked tax schedules</li>
+            <li><strong>Chetty et al. (2011)</strong>: Optimization frictions and adjustment costs in bunching responses</li>
+            <li><strong>Kleven & Waseem (2013)</strong>: Using notches to uncover optimization frictions and structural elasticities</li>
+            <li><strong>Liu & Lockwood (2015)</strong>: VAT notches analysis providing the core methodology implemented here</li>
+            <li><strong>Best et al. (2018)</strong>: Mortgage notches and intertemporal substitution elasticity estimation</li>
+            <li><strong>Kleven (2016)</strong>: Comprehensive review of bunching methods and applications</li>
+        </ul>
+
+        <h2>Methodology</h2>
+        <p>The analysis implements a <strong>5-step pipeline</strong> for VAT bunching analysis:</p>
+
+        <h3>Step 1: Counterfactual Distribution and Bunching Statistics</h3>
+        <ul>
+            <li><strong>Objective</strong>: Build a smooth counterfactual distribution representing firm turnover without the VAT threshold</li>
+            <li><strong>Method</strong>: Polynomial regression excluding the bunching region $[T^* - W, T^* + W]$</li>
+        </ul>
+
+        <h4>Mathematical Framework:</h4>
+        <p>Pick a window $W$ around the threshold $T^*$ (e.g. $W = $ £10k).</p>
+        <p>Fit the counterfactual density $f^{cf}(T)$ excluding $[T^* - W, T^* + W]$ and predict inside.</p>
+        <p>Bin the observed data to get $f^{obs}(T)$ and CDFs $F^{obs}, F^{cf}$.</p>
+
+        <div class="formula-block">
+            <strong>Masses in the window:</strong>
+            <p>$$q_N^{obs} = \int_{T^*-W}^{T^*} f^{obs}(T)dT, \quad q_R^{obs} = \int_{T^*}^{T^*+W} f^{obs}(T)dT$$</p>
+            <p>$$q_N^{cf} = \int_{T^*-W}^{T^*} f^{cf}(T)dT, \quad q_R^{cf} = \int_{T^*}^{T^*+W} f^{cf}(T)dT$$</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Excess & missing mass:</strong>
+            <p>$$E = \int_{T^*-W}^{T^*} [f^{obs} - f^{cf}]_+ dT, \quad \Delta R = \int_{T^*}^{T^*+W} [f^{cf} - f^{obs}]_+ dT$$</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Bunching ratio:</strong>
+            <p>$$b = \frac{q_N^{obs} - q_N^{cf}}{q_N^{cf}}$$</p>
+            <p><em>Economic Meaning</em>: <strong>$b$</strong> is the <strong>bunching ratio</strong> measuring the <strong>excess mass</strong> below the threshold as a fraction of what should be there without the tax.</p>
+            <p><em>Interpretation</em>:</p>
+            <ul>
+                <li><strong>$b = 0$</strong>: No bunching - tax has no behavioral effect</li>
+                <li><strong>$b = 0.1$</strong>: 10% excess mass - modest bunching response</li>
+                <li><strong>$b = 0.5$</strong>: 50% excess mass - strong bunching response</li>
+                <li><strong>$b = 1.0$</strong>: 100% excess mass - very strong response (twice as many firms as expected)</li>
+            </ul>
+            <p><em>Why this matters</em>:</p>
+            <ol>
+                <li><strong>Policy evaluation</strong>: Quantifies behavioral response to current policy</li>
+                <li><strong>Cross-country comparison</strong>: Standardized measure of bunching intensity</li>
+                <li><strong>Theoretical validation</strong>: Links data patterns to underlying economic parameters</li>
+                <li><strong>Prediction</strong>: Helps forecast responses to policy changes</li>
+            </ol>
+            <p><em>Empirical range</em>: Typical VAT bunching studies find $b \in [0.05, 0.3]$, with our baseline estimate $b = 0.107$ (10.7%) being within normal range.</p>
+        </div>
+
+        <h3>Step 2: Effective Wedge Calibration</h3>
+        <ul>
+            <li><strong>Objective</strong>: Quantify the effective tax burden from VAT registration</li>
+        </ul>
+
+        <h4>Economic Intuition:</h4>
+        <p>The effective wedge captures the <strong>two channels</strong> firms care about when deciding whether VAT registration is costly:</p>
+
+        <p><strong>What changes when a firm registers for VAT?</strong></p>
+        <ol>
+            <li>It must <strong>charge VAT on outputs</strong> (sales)</li>
+            <li>It can <strong>reclaim VAT on inputs</strong> (intermediate purchases)</li>
+        </ol>
+
+        <p>So the <strong>net effective wedge</strong> is:</p>
+        <div class="formula-block">
+            <p>$$\tau_e = \text{(extra output VAT burden not passed on)} - \text{(input VAT credit benefit)}$$</p>
+        </div>
+
+        <h4>Step-by-step construction:</h4>
+
+        <p><strong>The output side:</strong></p>
+        <ul>
+            <li>Statutory VAT rate: $\tau$</li>
+            <li>Share $\lambda$ of sales is to <strong>consumers</strong> (B2C) - business customers reclaim VAT, so they don't care</li>
+            <li>Of that VAT, share $\rho$ is <strong>passed through</strong> into higher consumer prices
+                <ul>
+                    <li>If $\rho = 1$: firm shifts whole burden to customers</li>
+                    <li>If $\rho = 0$: firm absorbs it all</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="formula-block">
+            <strong>Effective output VAT cost to the firm:</strong>
+            <p>$$\lambda(1-\rho)\tau$$</p>
+        </div>
+
+        <p><strong>The input side:</strong></p>
+        <ul>
+            <li>Input costs = $s_c$ share of turnover</li>
+            <li>Share $v$ of those inputs are VAT-eligible</li>
+            <li>When registered, firm can reclaim VAT on those inputs, getting a saving of:</li>
+        </ul>
+        <div class="formula-block">
+            <p>$$\tau \cdot s_c \cdot v$$</p>
+        </div>
+
+        <h4>Mathematical Framework:</h4>
+        <div class="formula-block">
+            <strong>Net effective wedge formula:</strong>
+            <p>$$\tau_e = \lambda(1-\rho)\tau - \tau s_c v$$</p>
+            <p><em>Economic Meaning</em>: <strong>$\tau_e$</strong> (tau-e) is the <strong>net effective tax rate</strong> that firms face from VAT registration - the key parameter driving bunching behavior.</p>
+            <p><em>Component breakdown</em>:</p>
+            <ol>
+                <li><strong>$\lambda(1-\rho)\tau$</strong>: <strong>Output tax burden</strong> that firm cannot pass through to customers</li>
+                <li><strong>$\tau s_c v$</strong>: <strong>Input tax credit benefit</strong> from VAT registration</li>
+            </ol>
+            <p><em>Economic logic</em>:</p>
+            <ul>
+                <li><strong>If $\lambda(1-\rho)\tau > \tau s_c v$</strong>: Net burden from registration → firms bunch below threshold</li>
+                <li><strong>If $\lambda(1-\rho)\tau < \tau s_c v$</strong>: Net benefit from registration → firms voluntarily register</li>
+                <li><strong>If $\lambda(1-\rho)\tau = \tau s_c v$</strong>: Indifferent → minimal bunching</li>
+            </ul>
+            <p><em>Default calibration</em>: $\tau_e = 0.05$ (5%) represents a moderate net burden typical for UK firms.</p>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li>$\tau$ = VAT rate</li>
+            <li>$\lambda$ = B2C sales share</li>
+            <li>$\rho$ = price pass-through rate</li>
+            <li>$s_c$ = input cost share</li>
+            <li>$v$ = VAT-eligible input share</li>
+        </ul>
+
+        <p><strong>Interpretation:</strong></p>
+        <ul>
+            <li>If <strong>output term dominates</strong> → $\tau_e > 0$: firms want to stay below threshold (classic bunching)</li>
+            <li>If <strong>input term dominates</strong> → $\tau_e < 0$: firms prefer registration (explains voluntary registration)</li>
+        </ul>
+
+        <p><strong>Default</strong>: $\tau_e = 0.050$ (5% effective wedge assumption)</p>
+
+        <h3>Step 3: Substitution Elasticity Estimation</h3>
+        <ul>
+            <li><strong>Objective</strong>: Calibrate behavioral responsiveness using CES/logit framework</li>
+            <li><strong>Method</strong>: Compare observed vs. counterfactual mass ratios in bunching window using CES/logit framework (Kleven & Waseem, 2013)</li>
+        </ul>
+
+        <h4>Economic Intuition:</h4>
+        <p><strong>The Economic Problem:</strong><br>
+        Firms around the VAT threshold face a binary choice:</p>
+        <ul>
+            <li><strong>Regime N</strong>: Stay below threshold → turnover $T < T^*$, avoid VAT</li>
+            <li><strong>Regime R</strong>: Go above threshold → turnover $T \geq T^*$, register for VAT, face effective wedge $1+\tau_e$</li>
+        </ul>
+
+        <p><strong>Why CES/logit?</strong><br>
+        Economists model <strong>choice between two options</strong> with CES or multinomial logit because:</p>
+        <ul>
+            <li>CES aggregators produce <strong>constant elasticity of substitution</strong> across alternatives</li>
+            <li><strong>Parsimonious</strong>: one parameter $\sigma$ summarizes how sensitive the ratio of choices is to relative "price" changes</li>
+            <li>Nests intuitive extremes:
+                <ul>
+                    <li>$\sigma = 0$: firms never switch regimes, regardless of wedge</li>
+                    <li>$\sigma \to \infty$: firms infinitely responsive, any wedge fully empties one regime</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="formula-block">
+            <strong>CES/logit share equation:</strong>
+            <p>$$\frac{q_R^{obs}}{q_N^{obs}} = \left(\frac{1}{1+\tau_e}\right)^\sigma \times \frac{q_R^{cf}}{q_N^{cf}}$$</p>
+            <p><em>Economic Meaning</em>: This equation describes how the <strong>relative attractiveness</strong> of being above vs below the threshold changes due to the VAT wedge.</p>
+            <p><em>Terms explained</em>:</p>
+            <ul>
+                <li><strong>$q_R^{obs}/q_N^{obs}$</strong>: <strong>Observed ratio</strong> of firms above/below threshold (what we see in data)</li>
+                <li><strong>$q_R^{cf}/q_N^{cf}$</strong>: <strong>Counterfactual ratio</strong> without tax distortions (what ratio "should" be)</li>
+                <li><strong>$(1/(1+\tau_e))^\sigma$</strong>: <strong>Distortion factor</strong> showing how tax wedge changes relative attractiveness</li>
+                <li><strong>$\sigma$</strong>: <strong>Elasticity</strong> controlling strength of response</li>
+            </ul>
+            <p><em>Policy insight</em>: This equation lets us predict how changing tax parameters ($\tau_e$) will affect firm location choices, given the estimated behavioral elasticity ($\sigma$).</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Closed-form elasticity calibration:</strong>
+            <p>$$\sigma = \frac{\ln\left(\frac{q_R^{cf}/q_N^{cf}}{q_R^{obs}/q_N^{obs}}\right)}{\ln(1 + \tau_e)}$$</p>
+            <p><em>Economic Meaning</em>: <strong>$\sigma$</strong> (sigma) is the <strong>substitution elasticity</strong> measuring how responsive firms are to the VAT registration incentive. It quantifies behavioral flexibility.</p>
+            <p><em>Intuition</em>:</p>
+            <ul>
+                <li><strong>$\sigma = 0$</strong>: Firms completely inflexible - no response to tax incentives</li>
+                <li><strong>$\sigma = 2$</strong>: Moderate responsiveness - some firms adjust</li>
+                <li><strong>$\sigma = 5$</strong>: High responsiveness - many firms actively avoid threshold</li>
+                <li><strong>$\sigma \to \infty$</strong>: Perfect flexibility - any tax cost causes complete avoidance</li>
+            </ul>
+            <p><em>Formula logic</em>:</p>
+            <ul>
+                <li><strong>Numerator</strong>: How much the above/below ratio changes due to the tax</li>
+                <li><strong>Denominator</strong>: Size of the tax wedge causing the change</li>
+                <li><strong>Ratio</strong>: Responsiveness = (% change in ratio) / (% change in tax cost)</li>
+            </ul>
+            <p><em>Policy relevance</em>: Higher $\sigma$ means stronger responses to policy changes - more firms will adjust when thresholds or rates change.</p>
+            
+            <h5>Understanding the Elasticity: Extensive vs Intensive Margins</h5>
+            
+            <p><strong>Key Question</strong>: The elasticity $\sigma$ we calibrate - does it capture extensive margin (entry/exit from VAT registration) or intensive margin (adjusting turnover conditional on staying in same regime)?</p>
+            
+            <p><strong>Answer</strong>: The VAT bunching elasticity $\sigma$ is primarily an <strong>EXTENSIVE MARGIN</strong> elasticity, but it captures both margins in a nuanced way.</p>
+            
+            <p><strong>Extensive Margin Component (Primary):</strong></p>
+            <ul>
+                <li><strong>Definition</strong>: Choice between two discrete regimes: "VAT-registered" vs "Non-VAT-registered"</li>
+                <li><strong>What $\sigma$ captures</strong>: <strong>$\sigma$ measures how firms substitute between two discrete choices: "VAT-registered" vs "Non-VAT-registered"</strong></li>
+                <li><strong>Behavioral interpretation</strong>:
+                    <ul>
+                        <li>$\sigma = 0$: No firms change registration status regardless of VAT costs</li>
+                        <li>$\sigma = \infty$: Any VAT cost causes complete exit from registration</li>
+                    </ul>
+                </li>
+                <li><strong>CES/logit foundation</strong>: $\sigma$ governs how sensitive the choice between two discrete alternatives is to their relative "prices" (attractiveness)</li>
+            </ul>
+            
+            <p><strong>Two Policy Parameters, One Underlying Elasticity:</strong></p>
+            
+            <p><strong>1. Threshold Changes $(T^* \to T^{*'})$:</strong></p>
+            <ul>
+                <li>Changes the <strong>location</strong> where extensive margin choice becomes relevant</li>
+                <li>Same $\sigma$ governs firm responses, but different firms are now affected</li>
+                <li>Step 5 uses: $\Pi' = 1 - (1 + \tau_e)^{-\sigma}$ with same $\sigma$ but new threshold location</li>
+            </ul>
+            
+            <p><strong>2. Tax Rate Changes $(\tau \to \tau')$:</strong></p>
+            <ul>
+                <li>Changes the <strong>intensity</strong> of the effective wedge $(\tau_e)$</li>
+                <li>Same $\sigma$ governs responsiveness, but wedge magnitude changes</li>
+                <li>Step 7 uses: $\sigma$ for revenue elasticity w.r.t rate changes</li>
+            </ul>
+            
+            <p><strong>The Power of Structural Modeling:</strong></p>
+            <pre><code>One behavioral parameter σ → Predicts responses to ANY policy change</code></pre>
+            
+            <p><strong>Conclusion:</strong><br>
+            The VAT bunching elasticity $\sigma$ is best interpreted as an <strong>extensive margin elasticity</strong> measuring sensitivity to discrete regime choice, with some intensive margin components. This single parameter allows us to predict responses to both threshold changes (affecting choice location) and rate changes (affecting choice intensity).</p>
+        </div>
+
+        <p><strong>Interpretation</strong>: Higher $\sigma$ = more elastic firm responses to tax incentives</p>
+
+        <h3>Step 4: Micro-Level Mapping to No-Notch World</h3>
+        <ul>
+            <li><strong>Objective</strong>: Create individual firm mappings from observed to counterfactual turnover</li>
+            <li><strong>Advanced Implementation</strong>: Sophisticated probabilistic redistribution algorithm</li>
+        </ul>
+
+        <h4>Mathematical Framework:</h4>
+        <p>For each firm with observed turnover $T^{obs} \in [T^* - W, T^*]$:</p>
+
+        <div class="formula-block">
+            <strong>Aggregate displaced share:</strong>
+            <p>$$\Pi = 1 - (1 + \tau_e)^{-\sigma}$$</p>
+            <p><em>Economic Meaning</em>: <strong>$\Pi$</strong> represents the fraction of firms in the "above-threshold" region that choose to bunch below the threshold instead of their optimal counterfactual location.</p>
+            <p><em>Intuition</em>: If $\Pi = 0.18$, then 18% of firms that would naturally locate above the threshold $T^*$ (in the no-notch world) instead choose to bunch below it to avoid VAT registration. The remaining 82% find VAT registration worthwhile despite the costs.</p>
+            <p><em>Why this formula?</em>: Comes from the CES/logit choice model. Firms face a choice between "below threshold" (attractive, no VAT) vs "above threshold" (less attractive due to wedge $1+\tau_e$). The parameter $\sigma$ controls how sensitive this choice is to the relative attractiveness.</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Local bunching probability:</strong>
+            <p>$$\pi(T^{obs}) = \Pi \times \frac{[f^{obs}(T^{obs}) - f^{cf}(T^{obs})]_+}{E}$$</p>
+            <p><em>Economic Meaning</em>: <strong>$\pi(T^{obs})$</strong> is the probability that a firm observed at turnover $T^{obs}$ is actually a "buncher" (i.e., a firm that moved down from its true optimal location).</p>
+            <p><em>Intuition</em>: At any observed turnover level $T^{obs}$ below the threshold, some firms are "locals" (would be there anyway) and some are "bunchers" (moved down from above threshold). This probability tells us the mix.</p>
+            <p><em>Formula breakdown</em>:</p>
+            <ul>
+                <li>$[f^{obs} - f^{cf}]_+$: <strong>Excess density</strong> at $T^{obs}$ (how many "extra" firms are there)</li>
+                <li>$E$: <strong>Total excess mass</strong> in the bunching region (normalization)</li>
+                <li>$\Pi$: <strong>Aggregate displacement rate</strong> (scales the local effect)</li>
+            </ul>
+            <p><em>Example</em>: If $\pi(85k) = 0.3$, then 30% of firms observed at £85k turnover are actually bunchers who would optimally be above £90k in the no-notch world.</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>Deterministic (expected) counterfactual mapping:</strong>
+            <p>$$E[T^{cf}|T^{obs}] = (1 - \pi(T^{obs}))T^{obs} + \pi(T^{obs})(F^{cf})^{-1}(F^{cf}(T^*) + u(T^{obs})\Delta R)$$</p>
+            
+            <p><em>Economic Meaning</em>: <strong>$E[T^{cf}|T^{obs}]$</strong> is the expected counterfactual turnover for a firm observed at $T^{obs}$, accounting for the probability that it might be a buncher.</p>
+            
+            <h6>Deep Dive: How This Mapping Works</h6>
+            
+            <p><strong>The Core Economic Problem:</strong><br>
+            When we observe a firm at turnover $T^{obs} = $ £85k (below the £90k threshold), we face uncertainty: Is this firm's "true" optimal location actually £85k, or is it a more productive firm that would naturally be at £95k but is bunching down to avoid VAT?</p>
+            
+            <p><strong>The Probabilistic Solution:</strong><br>
+            The mapping formula elegantly handles this uncertainty by creating a <strong>mixture model</strong>:</p>
+            
+            <p><strong>Component 1: "Local" Firms (Probability $1-\pi$)</strong></p>
+            <p>$$(1 - \pi(T^{obs})) \times T^{obs}$$</p>
+            <ul>
+                <li>These are firms whose <strong>true optimal location</strong> is $T^{obs}$</li>
+                <li>They would be at £85k even without the VAT threshold</li>
+                <li>No displacement needed: $T^{cf} = T^{obs} = $ £85k</li>
+            </ul>
+            
+            <p><strong>Component 2: "Buncher" Firms (Probability $\pi$)</strong></p>
+            <p>$$\pi(T^{obs}) \times (F^{cf})^{-1}(F^{cf}(T^*) + u(T^{obs})\Delta R)$$</p>
+            <ul>
+                <li>These are <strong>displaced firms</strong> whose true optimal location is above the threshold</li>
+                <li>The complex term determines WHERE above the threshold they belong</li>
+            </ul>
+            
+            <h7>Economic Intuition with Concrete Example</h7>
+            
+            <p><strong>Firm observed at $T^{obs} = $ £88k:</strong></p>
+            <ul>
+                <li>$\pi(88k) = 0.3$ (30% chance it's a buncher)</li>
+                <li>$u(88k) = 0.7$ (if buncher, ranks in top 30% by productivity)</li>
+            </ul>
+            
+            <p><strong>The mapping gives:</strong></p>
+            <p>$$E[T^{cf}|88k] = 0.7 \times £88k + 0.3 \times £96k = £61.6k + £28.8k = £90.4k$$</p>
+            
+            <p><strong>Interpretation:</strong></p>
+            <ul>
+                <li>70% probability: True optimal location is £88k (local firm)</li>
+                <li>30% probability: True optimal location is £96k (buncher with high productivity)</li>
+                <li><strong>Expected</strong> counterfactual turnover: £90.4k</li>
+            </ul>
+            
+            <p><strong>Why This Sophisticated Approach?</strong></p>
+            <ol>
+                <li><strong>Heterogeneity Matters</strong>: Not all bunchers are identical. A firm bunching at £89k likely has higher productivity than one bunching at £80k.</li>
+                <li><strong>Mass Conservation</strong>: The algorithm ensures that the total mass moved up from bunching region exactly equals the missing mass above threshold.</li>
+                <li><strong>Smooth Redistribution</strong>: Higher-ranked bunchers get mapped to higher locations, creating realistic productivity sorting.</li>
+                <li><strong>Uncertainty Quantification</strong>: Rather than making hard assignments ("this firm IS a buncher"), we use probabilistic expectations that reflect our uncertainty.</li>
+            </ol>
+        </div>
+
+        <h3>Step 5: Forward Mapping to New Policy</h3>
+        <ul>
+            <li><strong>Objective</strong>: Simulate firm responses under alternative VAT thresholds by creating bunching at a new threshold location</li>
+            <li><strong>Pipeline</strong>: Real (£90k) → Counterfactual (no notch) → New Policy (£100k)</li>
+            <li><strong>Method</strong>: Reverse the Step 4 mapping to redistribute firms and create bunching at the new threshold</li>
+        </ul>
+
+        <h4>Economic Intuition:</h4>
+        <p>Step 5 answers the policy question: <strong>"What would happen to firm behavior if we moved the VAT threshold from £90k to £100k?"</strong></p>
+        
+        <p>The three-stage pipeline works as follows:</p>
+        <ol>
+            <li><strong>Real World (£90k)</strong>: Observed distribution with bunching at current threshold</li>
+            <li><strong>No-Notch Counterfactual</strong>: What the distribution would look like without any VAT threshold (from Step 1)</li>
+            <li><strong>New Policy (£100k)</strong>: What the distribution would look like with bunching at the new threshold location</li>
+        </ol>
+        
+        <p><strong>Why This Approach Works:</strong><br>
+        By going through the counterfactual "no-notch" world, we separate the <strong>structural behavioral parameters</strong> (elasticity $\sigma$) from the <strong>policy parameters</strong> (threshold location, wedge size). This allows us to simulate any policy change using the same underlying firm responsiveness.</p>
+
+        <h4>Mathematical Framework:</h4>
+        
+        <h5>Step 5a: Compute New Policy Parameters</h5>
+        
+        <div class="formula-block">
+            <strong>New effective wedge (if different):</strong>
+            <p>$$\tau'_e = \lambda(1-\rho)\tau' - \tau's_c v \text{ (or use same as original: } \tau'_e = \tau_e\text{)}$$</p>
+            <p><em>Intuition</em>: The effective wedge may change if the VAT rate changes, but for threshold-only reforms, we typically use the same wedge.</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>New displaced share under new wedge:</strong>
+            <p>$$\Pi' = 1 - (1 + \tau'_e)^{-\sigma}$$</p>
+            <p><em>Economic Meaning</em>: <strong>$\Pi'$</strong> is the fraction of firms that would optimally locate above the new threshold $T^{*'}$ but choose to bunch below it instead. This is the "aggregate displaced share" under the new policy.</p>
+            <p><em>Intuition</em>: If $\Pi' = 0.2$, then 20% of firms near the new threshold will bunch below it rather than locate above it. Higher $\sigma$ (more elastic firms) leads to higher $\Pi'$ (more bunching).</p>
+        </div>
+        
+        <h5>Step 5b: Redistribute Mass to Create New Bunching</h5>
+        <p>The algorithm takes the smooth counterfactual distribution $f^{cf}$ and redistributes firm mass to create bunching at the new threshold $T^{*'}$.</p>
+        
+        <div class="formula-block">
+            <strong>Mass redistribution principle:</strong>
+            <p>$$\text{Mass above new threshold in counterfactual} \times \Pi' = \text{Mass that moves down to create bunching}$$</p>
+        </div>
+        
+        <h6>Implementation Details:</h6>
+        <ol>
+            <li><strong>Identify source region</strong>: Firms above new threshold $T^{*'}$ in counterfactual</li>
+            <li><strong>Calculate mass to move</strong>: $\text{mass_to_move} = \Pi' \times \text{mass_above_new_threshold}$</li>
+            <li><strong>Reduce density above threshold</strong>: $f_{new}[\text{above } T^{*'}] = f^{cf}[\text{above } T^{*'}] \times (1 - \Pi')$</li>
+            <li><strong>Increase density below threshold</strong>: Redistribute moved mass to region below $T^{*'}$</li>
+            <li><strong>Apply sophisticated smoothing</strong>: Multiple passes of moving averages to eliminate artificial discontinuities</li>
+        </ol>
+        
+        <div class="formula-block">
+            <strong>Distance-based redistribution weights:</strong>
+            <p>$$\text{weights} = \frac{1}{\max(T^{*'} - T, 0.5)} \text{ for } T < T^{*'}$$</p>
+            <p><em>Intuition</em>: Firms bunch closer to the threshold, so bins immediately below $T^{*'}$ receive more of the redistributed mass.</p>
+        </div>
+        
+        <h5>Step 5c: Quality Assurance Features</h5>
+        
+        <div class="formula-block">
+            <strong>Mass conservation check:</strong>
+            <p>$$\int f_{new}(T) dT = \int f^{cf}(T) dT$$</p>
+            <p><em>Ensures total number of firms remains constant</em></p>
+        </div>
+        
+        <p><strong>Smoothing algorithm:</strong></p>
+        <ul>
+            <li><strong>3-point moving average</strong>: $0.25 \times f[i-1] + 0.5 \times f[i] + 0.25 \times f[i+1]$</li>
+            <li><strong>5-point moving average</strong>: $0.1 \times f[i-2] + 0.2 \times f[i-1] + 0.4 \times f[i] + 0.2 \times f[i+1] + 0.1 \times f[i+2]$</li>
+            <li><strong>11-point Gaussian</strong>: Final smoothing with Gaussian-like weights</li>
+        </ul>
+        <p><em>Purpose</em>: Eliminate sharp discontinuities that would be unrealistic in real firm data.</p>
+        
+        <h5>Step 5d: Asymmetric Window Support</h5>
+        <p>The implementation supports different window sizes for the new policy:</p>
+        <pre><code># Different windows around new £100k threshold
+new_policy_window_left = 25   # £25k below (£75k-£100k)
+new_policy_window_right = 20  # £20k above (£100k-£120k)</code></pre>
+        <p><em>Flexibility</em>: Allows fine-tuning of the analysis region around the new threshold based on economic considerations.</p>
+        
+        <h4>Economic Output:</h4>
+        <p>Step 5 produces:</p>
+        <ol>
+            <li><strong>f_new_policy</strong>: New firm turnover distribution with bunching at $T^{*'}$</li>
+            <li><strong>Bunching statistics</strong>: Excess mass, missing mass around new threshold</li>
+            <li><strong>Policy comparison metrics</strong>: Changes in firm behavior patterns</li>
+            <li><strong>Visual verification</strong>: New bunching spike at $T^{*'} = $ £100k in the purple curve</li>
+        </ol>
+        
+        <h4>Policy Insights:</h4>
+        <ul>
+            <li><strong>Threshold increase effects</strong>: Moving from £90k to £100k reduces the number of affected firms (fewer firms near £100k than £90k)</li>
+            <li><strong>Revenue implications</strong>: Can be analyzed in Step 6 using the new distribution</li>
+            <li><strong>Behavioral consistency</strong>: Same elasticity $\sigma$ governs responses at both thresholds</li>
+            <li><strong>Welfare effects</strong>: Deadweight loss patterns shift with the threshold location</li>
+        </ul>
+
+        <h2>Key Features</h2>
+
+        <h3>Advanced Probabilistic Mapping</h3>
+        <p>The implementation uses an advanced probabilistic mapping approach that:</p>
+        <ul>
+            <li><strong>Preserves mass conservation</strong>: Total firm count remains constant</li>
+            <li><strong>Creates smooth distributions</strong>: Eliminates artificial discontinuities</li>
+            <li><strong>Optimizes parameters</strong>: Uses scipy optimization for best fit</li>
+            <li><strong>Handles full range</strong>: Maps firms across entire turnover distribution</li>
+        </ul>
+
+        <h3>Asymmetric Windows</h3>
+        <p>Supports different window sizes on each side of thresholds:</p>
+        <pre><code># Counterfactual estimation windows
+counterfactual_window_left = 25   # £25k below £90k threshold
+counterfactual_window_right = 20  # £20k above £90k threshold
+
+# New policy windows  
+new_policy_window_left = 25       # £25k below £100k threshold
+new_policy_window_right = 20      # £20k above £100k threshold</code></pre>
+
+        <h2>Usage</h2>
+
+        <h3>Basic Usage</h3>
+        <pre><code>from bunching_analysis import CounterfactualBunchingAnalysis
+
+# Initialize analysis
+analysis = CounterfactualBunchingAnalysis(
+    threshold=90,                    # £90k VAT threshold
+    window_left=25,                  # Analysis window parameters
+    window_right=20,
+    new_policy_window_left=25,
+    new_policy_window_right=20
+)
+
+# Run complete pipeline
+results = analysis.run_complete_analysis()</code></pre>
+
+        <h3>Advanced Configuration</h3>
+        <pre><code># Custom effective wedge and elasticity
+analysis.set_effective_wedge(0.045)  # 4.5% effective wedge
+analysis.calibrate_substitution_elasticity()
+
+# Run Step 4 advanced mapping
+analysis.run_step4_analysis()
+
+# Forward map to new policy
+analysis.step5_forward_map_to_new_policy(T_star_new=100)</code></pre>
+
+        <h2>Results</h2>
+
+        <h3>Baseline Results (£90k threshold)</h3>
+        <ul>
+            <li><strong>Bunching ratio</strong>: $b = 0.107$ (10.7% excess mass)</li>
+            <li><strong>Effective wedge</strong>: $\tau_e = 0.050$ (5%)</li>
+            <li><strong>Substitution elasticity</strong>: $\sigma = 4.117$</li>
+            <li><strong>Displaced share</strong>: $\Pi = 0.182$ (18.2%)</li>
+        </ul>
+
+        <h3>Policy Simulation (£90k → £100k)</h3>
+        <ul>
+            <li>Successfully creates new bunching at £100k</li>
+            <li>Removes bunching at original £90k threshold</li>
+            <li>Smooth transition with minimal artificial effects</li>
+            <li>Revenue and elasticity analysis included</li>
+        </ul>
+
+        <h2>Evidence from Literature</h2>
+
+        <h3>Empirical Findings</h3>
+        <p>The methodology replicates key findings from the VAT bunching literature:</p>
+        <ol>
+            <li><strong>Sharp bunching below threshold</strong>: Consistent with theoretical predictions</li>
+            <li><strong>Missing mass above threshold</strong>: Evidence of real behavioral responses</li>
+            <li><strong>Heterogeneity by firm characteristics</strong>:
+                <ul>
+                    <li>Higher bunching for B2C-focused firms</li>
+                    <li>Lower bunching for input-intensive firms</li>
+                </ul>
+            </li>
+            <li><strong>Policy tracking</strong>: Bunching follows threshold changes over time</li>
+        </ol>
+
+        <h3>Robustness Checks</h3>
+        <ul>
+            <li><strong>Polynomial order sensitivity</strong>: Results stable across specifications</li>
+            <li><strong>Window size robustness</strong>: Consistent estimates across reasonable windows</li>
+            <li><strong>Mass conservation</strong>: Advanced mapping preserves total firm count</li>
+            <li><strong>Smoothness</strong>: Counterfactual distributions are economically plausible</li>
+        </ul>
+
+        <h2>Extensions</h2>
+
+        <h3>Steps 6-7: Revenue and Elasticity Analysis</h3>
+        <p>The production version includes:</p>
+
+        <h4>Step 6: Revenue Mapping Analysis</h4>
+        <div class="formula-block">
+            <strong>Revenue formula for each firm (following Liu & Lockwood, 2015):</strong>
+            <p>$$V = \tau(\theta T - vs_cT)$$</p>
+        </div>
+
+        <p>Where:</p>
+        <ul>
+            <li>$V$ = VAT revenue per firm</li>
+            <li>$\tau$ = VAT rate (20% in UK)</li>
+            <li>$\theta$ = taxable output share (typically 85%)</li>
+            <li>$T$ = firm turnover</li>
+            <li>$v$ = VAT-eligible input share (typically 70%)</li>
+            <li>$s_c$ = input cost share (typically 45%)</li>
+        </ul>
+
+        <h4>Step 7: Elasticity Calculations</h4>
+        <div class="formula-block">
+            <strong>1) Behavioral (odds) elasticity (following Kleven, 2016):</strong>
+            <p>$$\varepsilon_{behavioral} = -\sigma = \frac{d \ln(q_R/q_N)}{d \ln(1+\tau_e)}$$</p>
+        </div>
+
+        <div class="formula-block">
+            <strong>2) Revenue elasticity w.r.t VAT rate:</strong>
+            <p>$$\varepsilon_{revenue}^{rate} = \frac{dV/d\tau \times \tau/V}{1} = \frac{dV/V}{d\tau/\tau}$$</p>
+        </div>
+
+        <h3>Potential Extensions</h3>
+        <ul>
+            <li><strong>Sector-specific analysis</strong>: Industry heterogeneity in responses</li>
+            <li><strong>Dynamic analysis</strong>: Multi-period bunching patterns</li>
+            <li><strong>Welfare calculations</strong>: Deadweight loss from tax-induced distortions</li>
+            <li><strong>Machine learning</strong>: Non-parametric counterfactual estimation</li>
+        </ul>
+
+        <h2>References</h2>
+        <ol>
+            <li><strong>Saez, E.</strong> (2010). "Do taxpayers bunch at kink points?" <em>American Economic Journal: Economic Policy</em>, 2(3), 180-212.</li>
+            <li><strong>Chetty, R., Friedman, J. N., Olsen, T., & Pistaferri, L.</strong> (2011). "Adjustment costs, firm responses, and micro vs. macro labor supply elasticities." <em>Quarterly Journal of Economics</em>, 126(2), 749-804.</li>
+            <li><strong>Kleven, H. J., & Waseem, M.</strong> (2013). "Using notches to uncover optimization frictions and structural elasticities." <em>Quarterly Journal of Economics</em>, 128(2), 669-723.</li>
+            <li><strong>Best, M. C., Cloyne, J., Ilzetzki, E., & Kleven, H. J.</strong> (2018). "Estimating the elasticity of intertemporal substitution using mortgage notches." <em>NBER Working Paper 24948</em>.</li>
+            <li><strong>Liu, L., & Lockwood, B.</strong> (2015). "VAT notches." <em>CESifo Working Paper Series No. 5371</em>.</li>
+            <li><strong>Kleven, H. J.</strong> (2016). "Bunching." <em>Annual Review of Economics</em>, 8(1), 435-464.</li>
+        </ol>
+    </div>
+</body>
+</html>
