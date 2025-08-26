@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VAT Bunching Analysis Viewer</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .options { margin: 20px 0; }
+        .option { margin: 15px 0; padding: 15px; background: #ecf0f1; border-radius: 5px; }
+        .url { font-family: monospace; background: #34495e; color: white; padding: 10px; border-radius: 3px; word-break: break-all; }
+        .btn { display: inline-block; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 5px; }
+        .btn:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VAT Bunching Analysis Documentation</h1>
+        
+        <div class="options">
+            <div class="option">
+                <h3>🎯 Best Option: GitHub Pages</h3>
+                <p>Perfect MathJax rendering, professional URL:</p>
+                <div class="url">https://policyengine.github.io/uk-vatlab/</div>
+                <a href="https://policyengine.github.io/uk-vatlab/" class="btn">View Documentation</a>
+            </div>
+            
+            <div class="option">
+                <h3>📋 Alternative: Download & View</h3>
+                <p>For offline viewing with perfect math rendering:</p>
+                <ol>
+                    <li>Download the HTML file from the gist</li>
+                    <li>Open in any web browser</li>
+                    <li>All mathematical formulas will render correctly</li>
+                </ol>
+                <a href="https://gist.github.com/vahid-ahmadi/076fe602a9f926bee10044f826e9a6a4" class="btn">Get HTML File</a>
+            </div>
+            
+            <div class="option">
+                <h3>📊 What You'll Find</h3>
+                <ul>
+                    <li>Complete 5-step VAT bunching methodology</li>
+                    <li>Mathematical framework with proper notation</li>
+                    <li>Economic intuition for each parameter</li>
+                    <li>Policy simulation capabilities</li>
+                    <li>Citations and references</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+            <p><strong>Mathematical notation includes:</strong> $\sigma$, $\tau_e$, $\Pi$, and complex formulas like:</p>
+            <p>$$\sigma = \frac{\ln\left(\frac{q_R^{cf}/q_N^{cf}}{q_R^{obs}/q_N^{obs}}\right)}{\ln(1 + \tau_e)}$$</p>
+        </div>
+    </div>
+</body>
+</html>
