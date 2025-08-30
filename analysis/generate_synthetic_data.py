@@ -132,7 +132,7 @@ class SyntheticFirmGenerator:
             # Generate firms for each turnover band
             for band, (min_val, max_val, midpoint) in band_params.items():
                 if band in row and pd.notna(row[band]) and row[band] > 0:
-                    count = int(row[band])
+                    count = int(row[band] * 0.1)
                     
                     if count > 0:
                         # Generate turnover values with noise smoothing
@@ -471,7 +471,7 @@ class SyntheticFirmGenerator:
         return target_matrix, target_values
     
     def optimize_weights(self, target_matrix: Tensor, target_values: Tensor,
-                               n_iterations: int = 300, lr: float = 0.01) -> Tensor:
+                               n_iterations: int = 1_000, lr: float = 0.01) -> Tensor:
         """Optimize weights to match multiple targets simultaneously.
         
         Uses symmetric relative error loss for robust calibration.
@@ -1260,7 +1260,7 @@ def main():
     synthetic_df = generator.generate_synthetic_firms()
     
     # Save results
-    output_path = Path(__file__).parent / 'synthetic_firms_turnover.csv'
+    output_path = Path(__file__).parent / 'synthetic_firms.csv'
     synthetic_df.to_csv(output_path, index=False)
     
     file_size_mb = output_path.stat().st_size / 1024 / 1024
