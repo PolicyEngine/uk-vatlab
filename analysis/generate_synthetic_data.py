@@ -188,7 +188,7 @@ class SyntheticFirmGenerator:
         """Assign VAT registration flags to identify HMRC-visible firms.
         
         VAT registration triggers:
-        1. Mandatory: Annual turnover > £90k
+        1. Mandatory: Annual turnover > £85k
         2. Voluntary: Random subset of firms below threshold (calculated from HMRC data)
         
         Args:
@@ -202,16 +202,16 @@ class SyntheticFirmGenerator:
         
         # Calculate voluntary VAT rate from Target/Synthetic ratio for £1_to_Threshold
         hmrc_target_1_to_threshold = hmrc_bands['£1_to_Threshold']  # HMRC target: 678,350
-        synthetic_1_to_threshold = ((turnover_values > 0) & (turnover_values <= 90.0)).sum().item()  # Current synthetic count
+        synthetic_1_to_threshold = ((turnover_values > 0) & (turnover_values <= 85.0)).sum().item()  # Current synthetic count
         voluntary_rate = hmrc_target_1_to_threshold / synthetic_1_to_threshold if synthetic_1_to_threshold > 0 else 0.15
         
         logger.info(f"Calculated voluntary VAT rate: {voluntary_rate:.3f} (Target: {hmrc_target_1_to_threshold:,} / Synthetic: {synthetic_1_to_threshold:,})")
         
         # Mandatory registration above threshold
-        mandatory_vat = turnover_values > 90.0
+        mandatory_vat = turnover_values > 85.0
         
         # Voluntary registration below threshold (but above 0)
-        below_threshold = (turnover_values > 0) & (turnover_values <= 90.0)
+        below_threshold = (turnover_values > 0) & (turnover_values <= 85.0)
         n_below_threshold = below_threshold.sum().item()
         
         if n_below_threshold > 0:
@@ -588,8 +588,8 @@ class SyntheticFirmGenerator:
         
         # Assign bands based on turnover thresholds
         band_indices = torch.where(turnover_values <= 0, 0, band_indices)  # Negative_or_Zero
-        band_indices = torch.where((turnover_values > 0) & (turnover_values <= 90), 1, band_indices)  # £1_to_Threshold
-        band_indices = torch.where((turnover_values > 90) & (turnover_values <= 150), 2, band_indices)  # £Threshold_to_£150k
+        band_indices = torch.where((turnover_values > 0) & (turnover_values <= 85), 1, band_indices)  # £1_to_Threshold
+        band_indices = torch.where((turnover_values > 85) & (turnover_values <= 150), 2, band_indices)  # £Threshold_to_£150k
         band_indices = torch.where((turnover_values > 150) & (turnover_values <= 300), 3, band_indices)  # £150k_to_£300k
         band_indices = torch.where((turnover_values > 300) & (turnover_values <= 500), 4, band_indices)  # £300k_to_£500k
         band_indices = torch.where((turnover_values > 500) & (turnover_values <= 1000), 5, band_indices)  # £500k_to_£1m
@@ -713,7 +713,7 @@ class SyntheticFirmGenerator:
         def map_to_hmrc_band(turnover_k):
             if turnover_k <= 0:
                 return 'Negative_or_Zero'
-            elif turnover_k <= 90:
+            elif turnover_k <= 85:
                 return '£1_to_Threshold'
             elif turnover_k <= 150:
                 return '£Threshold_to_£150k'
