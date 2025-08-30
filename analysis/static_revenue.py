@@ -103,13 +103,13 @@ print("MULTI-YEAR REVENUE IMPACT ANALYSIS")
 print("="*100)
 
 # Define the fiscal years and parameters with correct baseline thresholds
-# Cumulative growth calculated from CPI: 2024=2.2%, 2025=1.5%, 2026=1.6%, 2027=1.9%, 2028=2.0%
+# Based on RPI with 2-year lag: 2024-25=2.0%, 2025-26=2.5%, 2026-27=3.0%
 fiscal_years = [
-    {"year": "2024-25", "rpi": "— (frozen)", "baseline": 85000, "policy": 90000, "hmrc_impact": -150, "firm_growth": 1.022},      # 2.2%
-    {"year": "2025-26", "rpi": "— (frozen)", "baseline": 85000, "policy": 90000, "hmrc_impact": -185, "firm_growth": 1.0373},     # 1.022 * 1.015
-    {"year": "2026-27", "rpi": "2024: +3.1%", "baseline": 87635, "policy": 90000, "hmrc_impact": -125, "firm_growth": 1.0539},    # 1.0373 * 1.016
-    {"year": "2027-28", "rpi": "2025: +2.0%", "baseline": 89388, "policy": 90000, "hmrc_impact": -50, "firm_growth": 1.0739},     # 1.0539 * 1.019
-    {"year": "2028-29", "rpi": "2026: +2.5%", "baseline": 91622, "policy": 90000, "hmrc_impact": 65, "firm_growth": 1.0954},      # 1.0739 * 1.020
+    {"year": "2024-25", "rpi": "— (frozen)", "baseline": 85000, "policy": 90000, "hmrc_impact": -150, "firm_growth": 1.031},      # 3.1%
+    {"year": "2025-26", "rpi": "— (frozen)", "baseline": 85000, "policy": 90000, "hmrc_impact": -185, "firm_growth": 1.0516},     # 1.031 * 1.020
+    {"year": "2026-27", "rpi": "2024-25: +2.0%", "baseline": 87000, "policy": 90000, "hmrc_impact": -125, "firm_growth": 1.0779},    # £85,000 * 1.020 = £87,000
+    {"year": "2027-28", "rpi": "2025-26: +2.5%", "baseline": 89000, "policy": 90000, "hmrc_impact": -50, "firm_growth": 1.1102},     # £87,000 * 1.025 = £89,175 ≈ £89,000
+    {"year": "2028-29", "rpi": "2026-27: +3.0%", "baseline": 92000, "policy": 90000, "hmrc_impact": 65, "firm_growth": 1.1424},      # £89,000 * 1.030 = £91,670 ≈ £92,000
 ]
 
 # Calculate PolicyEngine estimates for each year
@@ -215,7 +215,7 @@ ax.set_ylim(-250, 100)
 
 # Add baseline/policy annotations
 for i, fy in enumerate(fiscal_years):
-    baseline_text = f"Baseline: £{fy['baseline']/1000:.1f}k"
+    baseline_text = f"Baseline: £{fy['baseline']/1000:.0f}k"
     policy_text = f"Policy: £{fy['policy']/1000:.0f}k"
     ax.text(i, ax.get_ylim()[0] * 0.9, f"{baseline_text}\n{policy_text}", 
             ha='center', va='top', fontsize=10, color='gray')
