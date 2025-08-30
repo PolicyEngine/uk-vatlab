@@ -1,0 +1,6 @@
+Policy,Threshold,Standard Rate,Revenue (£B),Registered Firms,Bunching Firms,Behavioral Cost (£M),Effective Revenue Loss
+Current,"£90,000",20.0%,1.59,"29,772","1,263",51.5,3.1%
+Lower Threshold,"£85,000",20.0%,1.60,"31,066","1,104",53.2,3.2%
+Higher Threshold,"£100,000",20.0%,1.58,"27,911",898,53.0,3.3%
+Reduced Rates,"£90,000",20.0%,1.63,"29,774",553,50.5,3.0%
+Lower Rate,"£90,000",17.5%,1.40,"29,820","1,252",39.7,2.8%
