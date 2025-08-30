@@ -35,12 +35,12 @@ def create_turnover_plot():
     label_texts = [f'{i+1}' for i in label_positions]
     plt.xticks(label_positions, label_texts)
     
-    # Add vertical lines at 90k and 150k
-    plt.axvline(x=89, color='red', linestyle='--', alpha=0.7, linewidth=2)  # 90k threshold
+    # Add vertical lines at 85k and 150k
+    plt.axvline(x=84, color='red', linestyle='--', alpha=0.7, linewidth=2)  # 85k threshold
     plt.axvline(x=149, color='red', linestyle='--', alpha=0.7, linewidth=2)  # 150k threshold
     
     # Add labels for the vertical lines
-    plt.text(90, max(hist) * 0.8, 'VAT Threshold', rotation=0, color='red', fontsize=8, ha='left')
+    plt.text(85, max(hist) * 0.8, 'VAT Threshold', rotation=0, color='red', fontsize=8, ha='left')
     plt.text(150, max(hist) * 0.8, 'VAT Flat Rate Scheme', rotation=0, color='red', fontsize=8, ha='left')
     
     plt.grid(axis='y', alpha=0.3, linestyle='--')
