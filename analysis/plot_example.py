@@ -28,7 +28,7 @@ def create_turnover_plot():
     plt.bar(x_positions, hist, color='lightblue', alpha=0.7, edgecolor='black', linewidth=0.1)
     
     plt.xlabel('Annual Turnover (£k)')
-    plt.ylabel('Number of Firms (2024)')
+    plt.ylabel('Number of Firms (2023-24)')
     
     # Set x-axis labels every 10k
     label_positions = [i for i in range(9, len(hist), 10)]  # Start at 10k (index 9)
