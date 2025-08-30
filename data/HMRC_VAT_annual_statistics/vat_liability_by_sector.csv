@@ -1,0 +1,89 @@
+Trade_Sector,Trade_Sub_Sector,2023-24
+00001,"Crop and animal production, hunting and related service activities",-2330
+00002,Forestry and logging,100
+00003,Fishing and aquaculture,-100
+00005,Mining of coal and lignite,10
+00006,Extraction of crude petroleum and natural gas,-460
+00007,Mining of metal ores,-10
+00008,Other mining and quarrying,270
+00009,Mining and support service activities,-330
+00010,Manufacture of food products,-2150
+00011,Manufacture of beverages,1820
+00012,Manufacture of tobacco products,1700
+00013,Manufacture of textiles,450
+00014,Manufacture of wearing apparel,280
+00015,Manufacture of leather and related products,140
+00016,"Manufacture of wood and of products of wood and cork, except furniture; manufacture of articles of straw and plaiting materials",650
+00017,Manufacture of paper and paper products,920
+00018,Printing and reproduction of recorded media,480
+00019,Manufacture of coke and refined petroleum products,7810
+00020,Manufacture of chemicals and chemical products,1500
+00021,Manufacture of basic pharmaceutical products and pharmaceutical preparations,570
+00022,Manufacture of rubber and rubber products,1440
+00023,Manufacture of other non-metallic mineral products,1130
+00024,Manufacture of basic metals,-830
+00025,"Manufacture of fabricated metal products, except machinery and equipment",2000
+00026,"Manufacture of computer, electronic and optical products",1050
+00027,Manufacture of electrical equipment,770
+00028,Manufacture of machinery and equipment n.e.c,1150
+00029,"Manufacture of motor vehicles, trailers and semi-trailers",2040
+00030,Manufacture of other transport equipment,-1240
+00031,Manufacture of furniture,730
+00032,Other manufacturing,1090
+00033,Repair and installation of machinery and equipment,810
+00035,"Electricity, gas, steam and air conditioning supply",6020
+00036,"Water collection, treatment and supply",-2250
+00037,Sewerage,-10
+00038,"Waste collection, treatment and disposal activities; materials recovery",680
+00039,Remediation activities and other waste management services,370
+00041,Construction of buildings,2780
+00042,Civil engineering,4130
+00043,Specialised construction activities,3950
+00045,Wholesale and retail trade and repair of motor vehicles and motorcycles,13040
+00046,"Wholesale trade, except of motor vehicles and motorcycles",25980
+00047,Retail trade except of motor vehicles and motorcycles,16440
+00049,Land transport and transport via pipelines,-420
+00050,Water transport,-100
+00051,Air transport,-1080
+00052,Warehousing and support activities for transportation,1930
+00053,Postal and courier activities,1140
+00055,Accommodation,2760
+00056,Food and beverage service activities,8450
+00058,Publishing activities,700
+00059,"Motion picture, video and television programme production, sound recording and music publishing activities",210
+00060,Programming and broadcasting activities,-20
+00061,Telecommunications,4320
+00062,"Computer programming, consultancy and related activities",13720
+00063,Information service activities,460
+00064,"Financial service activities, except insurance and pension funding",-190
+00065,"Insurance, reinsurance and pension funding, except compulsory social security",200
+00066,Activities auxiliary to financial services and insurance activities,1180
+00068,Real estate activities,4180
+00069,Legal and accounting services,9120
+00070,Activities of head offices; management consultancy services,9010
+00071,Architectural and engineering activities; technical testing and analysis,4830
+00072,Scientific research and development,160
+00073,Advertising and market research,1990
+00074,"Other professional, scientific and technical activities",1560
+00075,Veterinary activities,770
+00077,Rental and leasing activities,3410
+00078,Employment activities,6000
+00079,"Travel agency, tour operator and other reservation service and related activities",-30
+00080,Security and investigation activities,1050
+00081,Services to buildings and landscape activities,2150
+00082,Office administrative and support activities,6230
+00084,Public administration and defence; compulsory social security,-11080
+00085,Education,410
+00086,Human health activities,60
+00087,Residential care activities,260
+00088,Social work activities without accommodation,370
+00090,"Creative, arts and entertainment activities",1690
+00091,"Libraries, archives, museums and other cultural activities",40
+00092,Gambling and betting activities,50
+00093,Sports activities and amusement and recreation activities,1680
+00094,Activities of membership organisations,520
+00095,Repair of computers and personal and household goods,280
+00096,Other personal service activities,2780
+00097,Activities of households as employers of domestic personnel,0
+00098,Undifferentiated goods- and services-producing activities of private households for own use,0
+00099,Activities of extraterritorial organisations and bodies,40
