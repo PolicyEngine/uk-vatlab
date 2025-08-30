@@ -48,12 +48,13 @@ class SyntheticFirmGenerator:
         
         logger.info(f"Initialized firm generator on device: {device}")
     
-    def load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, int]:
+    def load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, int]:
         """Load ONS and HMRC data files from standardized CSV sources.
         
         Returns:
             Tuple containing ONS turnover data, ONS employment data, 
-            HMRC turnover bands, HMRC sector data, and ONS total firm count
+            HMRC turnover bands, HMRC sector data, VAT liability by sector, 
+            VAT liability by turnover band, and ONS total firm count
         """
         logger.info("Loading data files...")
         
@@ -63,17 +64,23 @@ class SyntheticFirmGenerator:
         ons_employment_path = project_root / 'data' / 'ONS_UK_business_data' / 'firm_employment.csv'
         hmrc_turnover_path = project_root / 'data' / 'HMRC_VAT_annual_statistics' / 'vat_population_by_turnover_band.csv'
         hmrc_sector_path = project_root / 'data' / 'HMRC_VAT_annual_statistics' / 'vat_population_by_sector.csv'
+        vat_liability_sector_path = project_root / 'data' / 'HMRC_VAT_annual_statistics' / 'vat_liability_by_sector.csv'
+        vat_liability_band_path = project_root / 'data' / 'HMRC_VAT_annual_statistics' / 'vat_liability_by_turnover_band.csv'
         
         # Load CSV files
         ons_df = pd.read_csv(ons_path)
         ons_employment_df = pd.read_csv(ons_employment_path)
         hmrc_turnover_df = pd.read_csv(hmrc_turnover_path)
         hmrc_sector_df = pd.read_csv(hmrc_sector_path)
+        vat_liability_sector_df = pd.read_csv(vat_liability_sector_path)
+        vat_liability_band_df = pd.read_csv(vat_liability_band_path)
         
         logger.info(f"Loaded ONS turnover data: {len(ons_df)} rows")
         logger.info(f"Loaded ONS employment data: {len(ons_employment_df)} rows")
         logger.info(f"Loaded HMRC turnover data: {len(hmrc_turnover_df)} rows")
         logger.info(f"Loaded HMRC sector data: {len(hmrc_sector_df)} rows")
+        logger.info(f"Loaded VAT liability by sector data: {len(vat_liability_sector_df)} rows")
+        logger.info(f"Loaded VAT liability by band data: {len(vat_liability_band_df)} rows")
         
         # Extract ONS total
         ons_total_row = ons_df[ons_df['SIC Code'].isna() | (ons_df['SIC Code'] == '')]
@@ -85,7 +92,7 @@ class SyntheticFirmGenerator:
         
         logger.info(f"ONS total firms: {ons_total:,}")
         
-        return ons_df, ons_employment_df, hmrc_turnover_df, hmrc_sector_df, ons_total
+        return ons_df, ons_employment_df, hmrc_turnover_df, hmrc_sector_df, vat_liability_sector_df, vat_liability_band_df, ons_total
     
     def generate_base_firms(self, ons_df: pd.DataFrame) -> Tuple[Tensor, Tensor]:
         """Generate base firm records using efficient batch processing.
@@ -228,20 +235,24 @@ class SyntheticFirmGenerator:
         
         return vat_registered
     
-    def create_comprehensive_target_matrix(self, turnover_values: Tensor, sic_codes: Tensor,
-                                      hmrc_bands: Dict[str, int], hmrc_sector_df: pd.DataFrame, ons_employment_df: pd.DataFrame, ons_total: int) -> Tuple[Tensor, Tensor]:
+    def create_comprehensive_target_matrix(self, turnover_values: Tensor, sic_codes: Tensor, input_values: Tensor,
+                                      hmrc_bands: Dict[str, int], hmrc_sector_df: pd.DataFrame, ons_employment_df: pd.DataFrame, 
+                                      vat_liability_sector_df: pd.DataFrame, vat_liability_band_df: pd.DataFrame, ons_total: int) -> Tuple[Tensor, Tensor]:
         """Create comprehensive target matrix for calibration.
         
-        Creates targets for all HMRC turnover bands and sector targets.
+        Creates targets for all HMRC turnover bands, sector targets, and VAT liability targets.
         The optimization will determine which firms contribute to which targets 
         based on VAT registration flags.
         
         Args:
             turnover_values: Array of turnover values
             sic_codes: Array of SIC codes
+            input_values: Array of input values
             hmrc_bands: Dictionary of all HMRC targets by band
             hmrc_sector_df: HMRC sector data for ratio targets
             ons_employment_df: ONS employment data for ratio targets
+            vat_liability_sector_df: VAT liability data by sector
+            vat_liability_band_df: VAT liability data by turnover band
             ons_total: Total firm count target from ONS
             
         Returns:
@@ -255,11 +266,29 @@ class SyntheticFirmGenerator:
         hmrc_total = hmrc_sector_df[hmrc_sector_df['Trade_Sector'] == 'Total']['2023-24'].iloc[0]
         n_sectors = len(sector_rows)
         
+        # Get VAT liability sector data (excluding total)
+        vat_liability_sector_rows = vat_liability_sector_df[vat_liability_sector_df['Trade_Sector'] != 'Total'].copy()
+        n_vat_sectors = len(vat_liability_sector_rows)
+        
+        # Get VAT liability by turnover band data
+        vat_liability_band_latest = vat_liability_band_df.iloc[-1]  # Get 2023-24 data
+        vat_liability_bands = {
+            'Negative_or_Zero': vat_liability_band_latest['Negative_or_Zero'],
+            '£1_to_Threshold': vat_liability_band_latest['£1_to_Threshold'],
+            '£Threshold_to_£150k': vat_liability_band_latest['£Threshold_to_£150k'],
+            '£150k_to_£300k': vat_liability_band_latest['£150k_to_£300k'],
+            '£300k_to_£500k': vat_liability_band_latest['£300k_to_£500k'],
+            '£500k_to_£1m': vat_liability_band_latest['£500k_to_£1m'],
+            '£1m_to_£10m': vat_liability_band_latest['£1m_to_£10m'],
+            'Greater_than_£10m': vat_liability_band_latest['Greater_than_£10m']
+        }
+        n_vat_bands = 7  # Number of VAT liability bands (excluding Total and Negative_or_Zero)
+        
         # Get employment data and calculate ratios
         emp_bands = ['0-4', '5-9', '10-19', '20-49', '50-99', '100-249', '250+']
         n_employment_bands = len(emp_bands)
         
-        n_targets = 7 + n_sectors + n_employment_bands  # 7 turnover targets + sector targets + employment ratio targets
+        n_targets = 7 + n_sectors + n_employment_bands + n_vat_sectors + n_vat_bands  # 7 turnover + sector + employment + VAT liability by sector + VAT liability by band
         
         # Initialize target matrix  
         target_matrix = torch.zeros(n_targets, n_firms, device=self.device)
@@ -316,10 +345,50 @@ class SyntheticFirmGenerator:
         
         # Rows 7+n_sectors to 7+n_sectors+n_employment_bands-1: Employment ratio targets  
         emp_start_row = 7 + n_sectors
-        for band_idx, band_name in enumerate(emp_bands):
+        for band_idx, _ in enumerate(emp_bands):
             row_idx = emp_start_row + band_idx
             firms_in_emp_band = (employment_band_indices == band_idx)
             target_matrix[row_idx, firms_in_emp_band] = 1.0
+        
+        # Calculate VAT liability for each firm (output - input)
+        vat_liability_values = turnover_values - input_values  # in £k
+        
+        # Rows 7+n_sectors+n_employment_bands to 7+n_sectors+n_employment_bands+n_vat_sectors-1: VAT liability targets by sector
+        vat_start_row = 7 + n_sectors + n_employment_bands
+        for i, (_, vat_row) in enumerate(vat_liability_sector_rows.iterrows()):
+            row_idx = vat_start_row + i
+            sic_code = int(vat_row['Trade_Sector'])
+            
+            # Find firms in this sector and calculate their VAT liability contribution
+            firms_in_sector = (sic_codes == sic_code)
+            # Weight by VAT liability for this sector's target
+            target_matrix[row_idx, firms_in_sector] = vat_liability_values[firms_in_sector]
+        
+        # Rows 7+n_sectors+n_employment_bands+n_vat_sectors to end: VAT liability targets by turnover band (excluding Negative_or_Zero)
+        vat_band_start_row = 7 + n_sectors + n_employment_bands + n_vat_sectors
+        for i, band_name in enumerate(['£1_to_Threshold', '£Threshold_to_£150k', 
+                                       '£150k_to_£300k', '£300k_to_£500k', '£500k_to_£1m', 
+                                       '£1m_to_£10m', 'Greater_than_£10m']):
+            row_idx = vat_band_start_row + i
+            
+            # Map firms to this turnover band
+            if band_name == '£1_to_Threshold':
+                firms_in_band = (turnover_values > 0) & (turnover_values <= 85)
+            elif band_name == '£Threshold_to_£150k':
+                firms_in_band = (turnover_values > 85) & (turnover_values <= 150)
+            elif band_name == '£150k_to_£300k':
+                firms_in_band = (turnover_values > 150) & (turnover_values <= 300)
+            elif band_name == '£300k_to_£500k':
+                firms_in_band = (turnover_values > 300) & (turnover_values <= 500)
+            elif band_name == '£500k_to_£1m':
+                firms_in_band = (turnover_values > 500) & (turnover_values <= 1000)
+            elif band_name == '£1m_to_£10m':
+                firms_in_band = (turnover_values > 1000) & (turnover_values <= 10000)
+            else:  # Greater_than_£10m
+                firms_in_band = turnover_values > 10000
+            
+            # Weight by VAT liability for this band's target
+            target_matrix[row_idx, firms_in_band] = vat_liability_values[firms_in_band]
         
         # Calculate targets
         # £1_to_Threshold: Use ONS structure (current count from generation)
@@ -358,7 +427,23 @@ class SyntheticFirmGenerator:
             emp_count = ons_emp_totals[band]
             employment_targets.append(emp_count)
         
-        target_values_list = turnover_targets + sector_targets + employment_targets
+        # VAT liability targets by sector (in millions £, convert to £k)
+        vat_liability_sector_targets = []
+        for _, vat_row in vat_liability_sector_rows.iterrows():
+            vat_liability_millions = vat_row['2023-24']  # in millions £
+            vat_liability_k = vat_liability_millions * 1000  # convert to £k
+            vat_liability_sector_targets.append(vat_liability_k)
+        
+        # VAT liability targets by turnover band (in millions £, convert to £k) - excluding Negative_or_Zero
+        vat_liability_band_targets = []
+        for band_name in ['£1_to_Threshold', '£Threshold_to_£150k', 
+                          '£150k_to_£300k', '£300k_to_£500k', '£500k_to_£1m', 
+                          '£1m_to_£10m', 'Greater_than_£10m']:
+            vat_liability_millions = vat_liability_bands[band_name]  # in millions £
+            vat_liability_k = vat_liability_millions * 1000  # convert to £k
+            vat_liability_band_targets.append(vat_liability_k)
+        
+        target_values_list = turnover_targets + sector_targets + employment_targets + vat_liability_sector_targets + vat_liability_band_targets
         
         target_values = torch.tensor(
             target_values_list, 
@@ -378,7 +463,9 @@ class SyntheticFirmGenerator:
         # Log sector and employment targets (summary)
         logger.info(f"  Sector targets: {n_sectors} sectors from HMRC data (VAT-registered)")
         logger.info(f"  Employment count targets: {n_employment_bands} bands from ONS data (direct counts)")
-        logger.info(f"  Total targets: {len(target_values_list)} (7 turnover + {n_sectors} sector + {n_employment_bands} employment counts)")
+        logger.info(f"  VAT liability sector targets: {n_vat_sectors} sectors from HMRC data (in £millions)")
+        logger.info(f"  VAT liability band targets: {n_vat_bands} bands from HMRC data (in £millions, 2x weight)")
+        logger.info(f"  Total targets: {len(target_values_list)} (7 turnover + {n_sectors} sector + {n_employment_bands} employment + {n_vat_sectors} VAT liability sector + {n_vat_bands} VAT liability band)")
         logger.info(f"  Negative_or_Zero: MANUAL (ONS doesn't have them)")
         
         return target_matrix, target_values
@@ -434,20 +521,34 @@ class SyntheticFirmGenerator:
             error_2 = ((target_adj / pred_adj) - 1) ** 2
             sre_loss = torch.minimum(error_1, error_2)
             
-            # Apply importance weights: turnover targets (0-6) most important, sector targets (7+n_sectors) important, employment targets less important
+            # Apply importance weights based on target type
             importance_weights = torch.ones_like(sre_loss)
             importance_weights[:7] = 5.0  # 5x weight for turnover targets
             
-            # Calculate where employment targets start (7 + number of sector targets)
+            # Calculate indices for different target types
+            # Structure: 7 turnover + n_sectors + n_employment_bands + n_vat_sectors + n_vat_bands
             n_total_targets = len(sre_loss)
-            if n_total_targets > 14:  # If we have more than 14 targets, we have sector + employment targets
-                # Estimate sector targets by subtracting turnover (7) and employment (7) from total
-                n_est_sectors = n_total_targets - 14
-                emp_start_idx = 7 + n_est_sectors
-                importance_weights[7:emp_start_idx] = 1.0  # 1x weight for sector targets  
-                importance_weights[emp_start_idx:] = 1.0  # 1x weight for employment targets
-            else:
-                importance_weights[7:] = 1.0  # 1x weight for remaining targets
+            
+            # We need to dynamically calculate the section sizes from the actual target matrix
+            # For now, use fixed estimates based on typical data structure
+            n_employment = 7  # Fixed: 7 employment bands
+            
+            # The remaining targets are split between sectors and VAT liability
+            n_remaining = n_total_targets - 7 - n_employment  # Remove turnover and employment
+            n_est_sectors = n_remaining // 3  # Rough estimate (sectors, vat_sectors, vat_bands)
+            n_est_vat_sectors = n_est_sectors
+            n_est_vat_bands = n_remaining - n_est_sectors - n_est_vat_sectors
+            
+            sector_start_idx = 7
+            emp_start_idx = 7 + n_est_sectors
+            vat_sector_start_idx = emp_start_idx + n_employment
+            vat_band_start_idx = vat_sector_start_idx + n_est_vat_sectors
+            
+            # Set importance weights
+            importance_weights[sector_start_idx:emp_start_idx] = 1.0  # 1x weight for sector targets
+            importance_weights[emp_start_idx:vat_sector_start_idx] = 1.0  # 1x weight for employment targets
+            importance_weights[vat_sector_start_idx:vat_band_start_idx] = 1.0  # 1x weight for VAT liability sector targets
+            importance_weights[vat_band_start_idx:] = 2.0  # 2x weight for VAT liability band targets
             
             weighted_loss = sre_loss * importance_weights
             total_loss = torch.mean(weighted_loss)
@@ -492,8 +593,8 @@ class SyntheticFirmGenerator:
         
         return final_weights.detach()
     
-    def apply_final_calibration(self, base_sic_codes: Tensor, base_turnover: Tensor,
-                                     weights_tensor: Tensor, hmrc_bands: Dict[str, int]) -> Tuple[Tensor, Tensor, Tensor]:
+    def apply_final_calibration(self, base_sic_codes: Tensor, base_turnover: Tensor, base_input: Tensor,
+                                     weights_tensor: Tensor, hmrc_bands: Dict[str, int]) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
         """Apply final calibration adjustments.
         
         Key calibration steps:
@@ -503,12 +604,13 @@ class SyntheticFirmGenerator:
         
         Args:
             base_sic_codes: Original base SIC codes
-            base_turnover: Original base turnover values  
+            base_turnover: Original base turnover values
+            base_input: Original base input values
             weights_tensor: Calibration weights from optimization
             hmrc_bands: HMRC target bands
             
         Returns:
-            Tuple of final (sic_codes, turnover, weights) tensors
+            Tuple of final (sic_codes, turnover, input, weights) tensors
         """
         logger.info("Applying final calibration adjustments...")
         
@@ -527,6 +629,7 @@ class SyntheticFirmGenerator:
             all_final_firms.append({
                 'sic_code': base_sic_codes[i].item(),
                 'annual_turnover_k': base_turnover[i].item(),
+                'annual_input_k': base_input[i].item(),
                 'weight': weight
             })
         
@@ -549,6 +652,7 @@ class SyntheticFirmGenerator:
                         all_final_firms.append({
                             'sic_code': sic.item(),
                             'annual_turnover_k': 0.0,
+                            'annual_input_k': 0.0,
                             'weight': 1.0
                         })
                         zero_firms_count += 1
@@ -561,6 +665,8 @@ class SyntheticFirmGenerator:
                                     dtype=torch.int64, device=self.device)
             final_turnover = torch.tensor([f['annual_turnover_k'] for f in all_final_firms], 
                                         dtype=torch.float32, device=self.device)
+            final_input = torch.tensor([f['annual_input_k'] for f in all_final_firms],
+                                     dtype=torch.float32, device=self.device)
             final_weights = torch.tensor([f['weight'] for f in all_final_firms], 
                                        dtype=torch.float32, device=self.device)
             
@@ -569,10 +675,11 @@ class SyntheticFirmGenerator:
         else:
             # Empty tensors if no firms generated
             final_sics = torch.empty(0, dtype=torch.int64, device=self.device)
-            final_turnover = torch.empty(0, dtype=torch.float32, device=self.device) 
+            final_turnover = torch.empty(0, dtype=torch.float32, device=self.device)
+            final_input = torch.empty(0, dtype=torch.float32, device=self.device)
             final_weights = torch.empty(0, dtype=torch.float32, device=self.device)
         
-        return final_sics, final_turnover, final_weights
+        return final_sics, final_turnover, final_input, final_weights
     
     def _map_to_hmrc_bands(self, turnover_values: Tensor) -> Tensor:
         """Map turnover values to HMRC band indices.
@@ -616,6 +723,72 @@ class SyntheticFirmGenerator:
               f"80-90%: {accuracy_80_90}/{n_items}, "
               f"<80%: {accuracy_below_80}/{n_items}")
         return overall_accuracy
+    
+    def generate_input_values(self, turnover_values: Tensor, sic_codes: Tensor) -> Tensor:
+        """Generate input values for firms directly from distributions.
+        
+        Input values are drawn from beta distributions that allow for:
+        - Most firms: inputs 60-95% of turnover (positive VAT liability)
+        - Some firms: inputs > turnover (negative VAT liability)
+        
+        Args:
+            turnover_values: Array of turnover values (output)
+            sic_codes: Array of SIC codes (used for sector-specific variations)
+            
+        Returns:
+            Array of input values in £k
+        """
+        logger.info("Generating input values for firms from distributions...")
+        
+        n_firms = len(turnover_values)
+        input_values = torch.zeros_like(turnover_values)
+        
+        # Generate input/output ratios from a beta distribution
+        # Beta(4, 2) gives a distribution centered around 0.67 with range [0, 1]
+        # We'll scale and shift this to get our desired range
+        alpha, beta = 4.0, 2.0
+        base_ratios = torch.distributions.Beta(alpha, beta).sample((n_firms,)).to(self.device)
+        
+        # Scale to range [0.3, 1.3] to allow both positive and negative VAT liability
+        # Most values will be in [0.6, 0.95] range
+        scaled_ratios = 0.3 + base_ratios * 1.0  # Maps [0,1] to [0.3, 1.3]
+        
+        # Add sector-specific noise
+        sector_noise = torch.randn(n_firms, device=self.device) * 0.15
+        
+        # For some sectors, shift the distribution to make negative liability more likely
+        for i in range(n_firms):
+            sic = sic_codes[i].item()
+            
+            # Add extra variation for certain sectors that tend to have extreme values
+            if sic in [1, 3, 6, 7, 9, 10, 24, 30, 36, 37, 49, 50, 51, 60, 64, 79, 84]:
+                # These sectors often have negative VAT liability
+                # Add positive bias to input ratio
+                scaled_ratios[i] += torch.rand(1, device=self.device).item() * 0.3
+            elif sic in [11, 12, 69, 70, 78]:
+                # These sectors often have high VAT liability (low inputs)
+                # Add negative bias to input ratio
+                scaled_ratios[i] -= torch.rand(1, device=self.device).item() * 0.2
+        
+        # Apply ratios with noise
+        final_ratios = torch.clamp(scaled_ratios + sector_noise, 0.1, 1.5)
+        
+        # Generate input values
+        for i in range(n_firms):
+            if turnover_values[i] <= 0:
+                input_values[i] = 0
+            else:
+                input_values[i] = turnover_values[i] * final_ratios[i]
+        
+        logger.info(f"Generated input values for {n_firms:,} firms")
+        logger.info(f"Input/output ratio statistics:")
+        logger.info(f"  Mean: {final_ratios.mean():.2%}")
+        logger.info(f"  Std: {final_ratios.std():.2%}")
+        logger.info(f"  Min: {final_ratios.min():.2%}")
+        logger.info(f"  Max: {final_ratios.max():.2%}")
+        logger.info(f"  Firms with negative VAT liability (input > output): {(final_ratios > 1.0).sum().item():,}")
+        
+        return input_values
     
     def assign_employment(self, num_firms: int, 
                                ons_employment_df: pd.DataFrame) -> Tensor:
@@ -694,7 +867,8 @@ class SyntheticFirmGenerator:
     
     def validate_comprehensive_accuracy(self, synthetic_df: pd.DataFrame, hmrc_target_bands: Dict[str, int],
                                        ons_total_target: int, ons_employment_df: pd.DataFrame, 
-                                       hmrc_sector_df: pd.DataFrame) -> Tuple[float, float, float, float]:
+                                       hmrc_sector_df: pd.DataFrame, vat_liability_df: pd.DataFrame, 
+                                       vat_liability_band_df: pd.DataFrame) -> Tuple[float, float, float, float, float, float]:
         """Validate synthetic data against official data sources.
         
         Args:
@@ -703,9 +877,10 @@ class SyntheticFirmGenerator:
             ons_total_target: ONS total firm count target  
             ons_employment_df: ONS employment data for validation
             hmrc_sector_df: HMRC sector data for validation
+            vat_liability_df: VAT liability data for validation
             
         Returns:
-            Tuple of (hmrc_accuracy, ons_accuracy, employment_accuracy, sector_accuracy)
+            Tuple of (hmrc_accuracy, ons_accuracy, employment_accuracy, sector_accuracy, vat_liability_accuracy)
         """
         logger.info("Validating synthetic data against official data sources...")
         
@@ -857,18 +1032,131 @@ class SyntheticFirmGenerator:
         print("-" * 65)
         sector_accuracy = self._print_accuracy_breakdown(sector_accuracies, len(sector_accuracies), "SECTOR")
         
+        # === VAT LIABILITY VALIDATION ===
+        # Get VAT liability sector data (excluding total)
+        vat_liability_rows = vat_liability_df[vat_liability_df['Trade_Sector'] != 'Total'].copy()
+        
+        # Calculate synthetic VAT liability by sector
+        synthetic_df['vat_liability_k'] = synthetic_df['annual_turnover_k'] - synthetic_df['annual_input_k']
+        synthetic_df['sic_numeric'] = synthetic_df['sic_code'].astype(int)
+        
+        # Group by sector and calculate weighted VAT liability
+        synthetic_vat_liability = synthetic_df.groupby('sic_numeric').apply(
+            lambda x: (x['vat_liability_k'] * x['weight']).sum()
+        ).reset_index(name='synthetic_vat_liability_k')
+        
+        self._print_validation_section("VAT LIABILITY VALIDATION (by sector)")
+        print(f"{'SIC':>5} {'Synthetic (£m)':>14} {'Target (£m)':>12} {'Accuracy':>10}")
+        print("-" * 65)
+        
+        vat_liability_accuracies = []
+        for _, vat_row in vat_liability_rows.iterrows():
+            sic_code = int(vat_row['Trade_Sector'])
+            target_millions = vat_row['2023-24']  # in millions £
+            target_k = target_millions * 1000  # convert to £k
+            
+            # Get synthetic VAT liability for this sector
+            sector_data = synthetic_vat_liability[synthetic_vat_liability['sic_numeric'] == sic_code]
+            if not sector_data.empty:
+                synthetic_k = sector_data['synthetic_vat_liability_k'].iloc[0]
+            else:
+                synthetic_k = 0
+            
+            synthetic_millions = synthetic_k / 1000  # convert back to millions for display
+            
+            # Calculate accuracy (handle negative targets)
+            if abs(target_millions) > 0.1:  # Skip near-zero targets
+                # For negative targets, check if signs match and relative magnitude
+                if target_millions < 0 and synthetic_millions < 0:
+                    # Both negative - check relative difference
+                    accuracy = 1 - min(abs(synthetic_millions - target_millions) / abs(target_millions), 1.0)
+                elif target_millions > 0 and synthetic_millions > 0:
+                    # Both positive - check relative difference
+                    accuracy = 1 - min(abs(synthetic_millions - target_millions) / target_millions, 1.0)
+                else:
+                    # Sign mismatch - poor accuracy
+                    accuracy = max(0, 1 - abs(synthetic_millions - target_millions) / max(abs(target_millions), 1))
+            else:
+                accuracy = 1.0 if abs(synthetic_millions) < 1 else 0.0
+            
+            vat_liability_accuracies.append(accuracy)
+            
+            status = "✓" if accuracy > 0.70 else "⚠" if accuracy > 0.50 else "✗"
+            print(f"  {status} {sic_code:>3}: {synthetic_millions:>12.1f} vs {target_millions:>10.1f} ({accuracy:>6.1%})")
+        
+        print("-" * 65)
+        vat_liability_sector_accuracy = self._print_accuracy_breakdown(vat_liability_accuracies, len(vat_liability_accuracies), "VAT LIABILITY BY SECTOR")
+        
+        # === VAT LIABILITY BY TURNOVER BAND VALIDATION ===
+        # Get VAT liability by turnover band targets (excluding Negative_or_Zero)
+        vat_liability_band_latest = vat_liability_band_df.iloc[-1]  # Get 2023-24 data
+        vat_liability_band_targets = {
+            '£1_to_Threshold': vat_liability_band_latest['£1_to_Threshold'],
+            '£Threshold_to_£150k': vat_liability_band_latest['£Threshold_to_£150k'],
+            '£150k_to_£300k': vat_liability_band_latest['£150k_to_£300k'],
+            '£300k_to_£500k': vat_liability_band_latest['£300k_to_£500k'],
+            '£500k_to_£1m': vat_liability_band_latest['£500k_to_£1m'],
+            '£1m_to_£10m': vat_liability_band_latest['£1m_to_£10m'],
+            'Greater_than_£10m': vat_liability_band_latest['Greater_than_£10m']
+        }
+        
+        # Calculate synthetic VAT liability by turnover band (VAT-registered firms only)
+        vat_registered_firms = synthetic_df[synthetic_df['vat_registered'] == True]
+        synthetic_vat_band_liability = vat_registered_firms.groupby('hmrc_band').apply(
+            lambda x: (x['vat_liability_k'] * x['weight']).sum()
+        ).reset_index(name='synthetic_vat_liability_k')
+        
+        self._print_validation_section("VAT LIABILITY BY TURNOVER BAND VALIDATION")
+        print(f"{'Band':>25} {'Synthetic (£m)':>14} {'Target (£m)':>12} {'Accuracy':>10}")
+        print("-" * 75)
+        
+        vat_liability_band_accuracies = []
+        for band_name, target_millions in vat_liability_band_targets.items():
+            # Get synthetic VAT liability for this band
+            band_data = synthetic_vat_band_liability[synthetic_vat_band_liability['hmrc_band'] == band_name]
+            if not band_data.empty:
+                synthetic_k = band_data['synthetic_vat_liability_k'].iloc[0]
+            else:
+                synthetic_k = 0
+            
+            synthetic_millions = synthetic_k / 1000  # convert back to millions for display
+            
+            # Calculate accuracy (handle negative targets)
+            if abs(target_millions) > 0.1:  # Skip near-zero targets
+                if target_millions < 0 and synthetic_millions < 0:
+                    # Both negative - check relative difference
+                    accuracy = 1 - min(abs(synthetic_millions - target_millions) / abs(target_millions), 1.0)
+                elif target_millions > 0 and synthetic_millions > 0:
+                    # Both positive - check relative difference
+                    accuracy = 1 - min(abs(synthetic_millions - target_millions) / target_millions, 1.0)
+                else:
+                    # Sign mismatch - poor accuracy
+                    accuracy = max(0, 1 - abs(synthetic_millions - target_millions) / max(abs(target_millions), 1))
+            else:
+                accuracy = 1.0 if abs(synthetic_millions) < 1 else 0.0
+            
+            vat_liability_band_accuracies.append(accuracy)
+            
+            status = "✓" if accuracy > 0.70 else "⚠" if accuracy > 0.50 else "✗"
+            print(f"  {status} {band_name:>22}: {synthetic_millions:>12.1f} vs {target_millions:>10.1f} ({accuracy:>6.1%})")
+        
+        print("-" * 75)
+        vat_liability_band_accuracy = self._print_accuracy_breakdown(vat_liability_band_accuracies, len(vat_liability_band_accuracies), "VAT LIABILITY BY BAND")
+        
         # === FINAL SUMMARY ===
-        overall_accuracy = (hmrc_accuracy + ons_population_accuracy + employment_accuracy + sector_accuracy) / 4
+        overall_accuracy = (hmrc_accuracy + ons_population_accuracy + employment_accuracy + sector_accuracy + vat_liability_sector_accuracy + vat_liability_band_accuracy) / 6
         
         self._print_validation_section("CALIBRATION SUMMARY", 80)
-        print(f"HMRC Turnover Bands: {hmrc_accuracy:.1%}")
-        print(f"ONS Population:      {ons_population_accuracy:.1%}")
-        print(f"Employment Bands:    {employment_accuracy:.1%}")
-        print(f"Sector Distribution: {sector_accuracy:.1%}")
-        print(f"Overall Accuracy:    {overall_accuracy:.1%}")
+        print(f"HMRC Turnover Bands:     {hmrc_accuracy:.1%}")
+        print(f"ONS Population:          {ons_population_accuracy:.1%}")
+        print(f"Employment Bands:        {employment_accuracy:.1%}")
+        print(f"Sector Distribution:     {sector_accuracy:.1%}")
+        print(f"VAT Liability by Sector: {vat_liability_sector_accuracy:.1%}")
+        print(f"VAT Liability by Band:   {vat_liability_band_accuracy:.1%}")
+        print(f"Overall Accuracy:        {overall_accuracy:.1%}")
         print(f"Total Population: {total_synthetic_weighted:,.0f} firms")
         
-        return hmrc_accuracy, ons_population_accuracy, employment_accuracy, sector_accuracy
+        return hmrc_accuracy, ons_population_accuracy, employment_accuracy, sector_accuracy, vat_liability_sector_accuracy, vat_liability_band_accuracy
     
     
 
@@ -884,7 +1172,7 @@ class SyntheticFirmGenerator:
         logger.info("Starting synthetic firm generation...")
         
         # Load data
-        ons_df, ons_employment_df, hmrc_turnover_df, hmrc_sector_df, ons_total = self.load_data()
+        ons_df, ons_employment_df, hmrc_turnover_df, hmrc_sector_df, vat_liability_df, vat_liability_band_df, ons_total = self.load_data()
         
         # Extract HMRC targets (VAT-registered firms only)
         hmrc_latest = hmrc_turnover_df.iloc[-1]
@@ -906,17 +1194,20 @@ class SyntheticFirmGenerator:
         # Generate base firms from ONS structure
         base_sic_codes, base_turnover = self.generate_base_firms(ons_df)
         
+        # Generate input values for firms
+        base_input = self.generate_input_values(base_turnover, base_sic_codes)
+        
         # Create target matrix for multi-objective optimization
         target_matrix, target_values = self.create_comprehensive_target_matrix(
-            base_turnover, base_sic_codes, hmrc_bands, hmrc_sector_df, ons_employment_df, ons_total
+            base_turnover, base_sic_codes, base_input, hmrc_bands, hmrc_sector_df, ons_employment_df, vat_liability_df, vat_liability_band_df, ons_total
         )
         
         # Optimize weights to match calibration targets
         optimized_weights = self.optimize_weights(target_matrix, target_values)
         
         # Apply final calibration (add zero firms manually)
-        final_sic_codes, final_turnover, final_weights = self.apply_final_calibration(
-            base_sic_codes, base_turnover, optimized_weights, hmrc_bands
+        final_sic_codes, final_turnover, final_input, final_weights = self.apply_final_calibration(
+            base_sic_codes, base_turnover, base_input, optimized_weights, hmrc_bands
         )
         
         # Assign employment to final firms
@@ -928,9 +1219,15 @@ class SyntheticFirmGenerator:
         # Convert to DataFrame
         logger.info("Converting to final DataFrame...")
         sic_codes_np = final_sic_codes.cpu().numpy().astype(int)
+        turnover_np = final_turnover.cpu().numpy()
+        input_np = final_input.cpu().numpy()
+        vat_liability_np = turnover_np - input_np  # Calculate VAT liability
+        
         synthetic_df = pd.DataFrame({
             'sic_code': [str(sic).zfill(5) for sic in sic_codes_np],
-            'annual_turnover_k': final_turnover.cpu().numpy(),
+            'annual_turnover_k': turnover_np,
+            'annual_input_k': input_np,
+            'vat_liability_k': vat_liability_np,
             'employment': employment_values.cpu().numpy().astype(int),
             'weight': final_weights.cpu().numpy(),
             'vat_registered': vat_flags.cpu().numpy().astype(bool)
@@ -941,7 +1238,7 @@ class SyntheticFirmGenerator:
         logger.info(f"  Weighted population: {synthetic_df['weight'].sum():,.0f}")
         
         # Validation against all data sources
-        self.validate_comprehensive_accuracy(synthetic_df, hmrc_bands, ons_total, ons_employment_df, hmrc_sector_df)
+        self.validate_comprehensive_accuracy(synthetic_df, hmrc_bands, ons_total, ons_employment_df, hmrc_sector_df, vat_liability_df, vat_liability_band_df)
         
         return synthetic_df
 
