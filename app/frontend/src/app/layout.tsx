@@ -1,8 +1,18 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Roboto_Serif, Roboto_Mono } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const robotoSerif = Roboto_Serif({ 
+  weight: ['300', '400', '500', '600'],
+  subsets: ['latin'],
+  variable: '--font-roboto-serif'
+})
+
+const robotoMono = Roboto_Mono({ 
+  weight: ['300', '400', '500'],
+  subsets: ['latin'],
+  variable: '--font-roboto-mono'
+})
 
 export const metadata: Metadata = {
   title: 'VAT policy simulator',
@@ -15,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className={`${robotoSerif.variable} ${robotoMono.variable}`}>
+      <body className="font-sans">{children}</body>
     </html>
   )
 }
