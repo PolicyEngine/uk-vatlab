@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../analysis/synthetic_firms.csv:/app/data/synthetic_firms.csv:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - vat-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    networks:
+      - vat-network
+
+networks:
+  vat-network:
+    driver: bridge
