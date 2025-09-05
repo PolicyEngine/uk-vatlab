@@ -17,7 +17,7 @@ export default function Home() {
     
     try {
       const response = await axios.post<PolicyAnalysisResult>(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/analyze`,
+        '/api/analyze',  // Use Next.js API route
         reform
       );
       setResults(response.data);
