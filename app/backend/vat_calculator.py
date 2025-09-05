@@ -119,12 +119,12 @@ class VATCalculator:
             96: "Other personal service activities"
         }
         self.fiscal_years = [
-            {"year": "2025-26", "baseline": 85000, "firm_growth": 1.0516},
-            {"year": "2026-27", "baseline": 87000, "firm_growth": 1.0779},
-            {"year": "2027-28", "baseline": 89000, "firm_growth": 1.1102},
-            {"year": "2028-29", "baseline": 92000, "firm_growth": 1.1424},
-            {"year": "2029-30", "baseline": 95000, "firm_growth": 1.1761},
-            {"year": "2030-31", "baseline": 98000, "firm_growth": 1.2114},
+            {"year": "2025-26", "baseline": 90000, "firm_growth": 1.0516},
+            {"year": "2026-27", "baseline": 90000, "firm_growth": 1.0779},
+            {"year": "2027-28", "baseline": 90000, "firm_growth": 1.1102},
+            {"year": "2028-29", "baseline": 90000, "firm_growth": 1.1424},
+            {"year": "2029-30", "baseline": 90000, "firm_growth": 1.1761},
+            {"year": "2030-31", "baseline": 90000, "firm_growth": 1.2114},
         ]
         self.vat_rate = 0.20
         # Create 10k-wide revenue bands up to 200k, then larger bands
