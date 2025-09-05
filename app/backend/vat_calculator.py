@@ -16,6 +16,7 @@ class VATCalculator:
             import os
             possible_paths = [
                 "/app/data/synthetic_firms.csv",  # Docker path
+                "./data/synthetic_firms.csv",     # Vercel path
                 "../../analysis/synthetic_firms.csv",  # Relative path from backend
                 "/Users/nikhilwoodruff/policyengine/uk-vatlab/analysis/synthetic_firms.csv"  # Absolute path
             ]
