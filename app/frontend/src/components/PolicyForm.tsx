@@ -22,13 +22,7 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
   const handleTaperTypeChange = (type: PolicyReform['taper_type']) => {
     const updates: Partial<PolicyReform> = { taper_type: type };
     
-    if (type === 'moderate') {
-      updates.taper_start = Math.max(65000, reform.registration_threshold - 25000);
-      updates.taper_end = reform.registration_threshold + 20000;
-    } else if (type === 'aggressive') {
-      updates.taper_start = Math.max(50000, reform.registration_threshold - 35000);
-      updates.taper_end = reform.registration_threshold + 10000;
-    } else if (type === 'none') {
+    if (type === 'none') {
       updates.taper_start = undefined;
       updates.taper_end = undefined;
       updates.taper_rate = undefined;
@@ -59,7 +53,7 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
             />
           </div>
           <p className="mt-1 text-xs">
-            Current baseline: £85,000 (2025-26)
+            Current baseline: £90,000 (2025-26)
           </p>
         </div>
 
@@ -79,40 +73,6 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
               <div>
                 <div className="font-medium">No taper</div>
                 <div className="text-xs">Full VAT liability above threshold</div>
-              </div>
-            </label>
-            
-            <label className="flex items-start cursor-pointer">
-              <input
-                type="radio"
-                value="moderate"
-                checked={reform.taper_type === 'moderate'}
-                onChange={() => handleTaperTypeChange('moderate')}
-                className="mt-1 mr-3 w-4 h-4 accent-black"
-              />
-              <div>
-                <div className="font-medium">Moderate taper</div>
-                <div className="text-xs">
-                  Gradual increase from <span className="font-mono">£{Math.max(65000, reform.registration_threshold - 25000).toLocaleString()}</span> 
-                  to <span className="font-mono">£{(reform.registration_threshold + 20000).toLocaleString()}</span>
-                </div>
-              </div>
-            </label>
-            
-            <label className="flex items-start cursor-pointer">
-              <input
-                type="radio"
-                value="aggressive"
-                checked={reform.taper_type === 'aggressive'}
-                onChange={() => handleTaperTypeChange('aggressive')}
-                className="mt-1 mr-3 w-4 h-4 accent-black"
-              />
-              <div>
-                <div className="font-medium">Aggressive taper</div>
-                <div className="text-xs">
-                  Steeper increase from <span className="font-mono">£{Math.max(50000, reform.registration_threshold - 35000).toLocaleString()}</span> 
-                  to <span className="font-mono">£{(reform.registration_threshold + 10000).toLocaleString()}</span>
-                </div>
               </div>
             </label>
             
