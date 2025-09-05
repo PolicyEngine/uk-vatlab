@@ -17,12 +17,14 @@ export default function AnimatedNumber({
   className = ''
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const previousValue = useRef(value);
+  const sanitized = Number.isFinite(value) ? value : 0;
+  const previousValue = useRef(sanitized);
 
   useEffect(() => {
     if (!ref.current) return;
 
-    const interpolate = d3.interpolateNumber(previousValue.current, value);
+    const next = Number.isFinite(value) ? value : 0;
+    const interpolate = d3.interpolateNumber(previousValue.current, next);
     const timer = d3.timer((elapsed) => {
       const t = Math.min(1, elapsed / duration);
       const currentValue = interpolate(t);
@@ -33,12 +35,12 @@ export default function AnimatedNumber({
       
       if (t === 1) {
         timer.stop();
-        previousValue.current = value;
+        previousValue.current = next;
       }
     });
 
     return () => timer.stop();
   }, [value, format, duration]);
 
-  return <span ref={ref} className={`font-mono ${className}`}>{format(value)}</span>;
+  return <span ref={ref} className={`font-mono ${className}`}>{format(sanitized)}</span>;
 }

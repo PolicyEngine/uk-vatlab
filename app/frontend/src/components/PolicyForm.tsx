@@ -32,8 +32,8 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-2 border-black p-6">
-      <h2 className="text-2xl font-medium mb-6">Design your VAT reform</h2>
+    <form onSubmit={handleSubmit} className="card p-6">
+      <h2 className="text-2xl font-medium mb-6 heading-grad">Design your VAT reform</h2>
       
       <div className="space-y-6">
         <div>
@@ -46,13 +46,13 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
               type="number"
               value={reform.registration_threshold}
               onChange={(e) => setReform({ ...reform, registration_threshold: parseInt(e.target.value) })}
-              className="flex-1 px-3 py-2 border border-black font-mono focus:outline-none focus:ring-0"
+              className="flex-1 px-3 py-2 font-mono focus:outline-none focus:ring-0 input"
               min="0"
               max="500000"
               step="1000"
             />
           </div>
-          <p className="mt-1 text-xs">
+          <p className="mt-1 text-xs text-subtle">
             Current baseline: £90,000 (2025-26)
           </p>
         </div>
@@ -68,11 +68,11 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
                 value="none"
                 checked={reform.taper_type === 'none'}
                 onChange={() => handleTaperTypeChange('none')}
-                className="mt-1 mr-3 w-4 h-4 accent-black"
+                className="mt-1 mr-3 w-4 h-4 accent-white"
               />
               <div>
                 <div className="font-medium">No taper</div>
-                <div className="text-xs">Full VAT liability above threshold</div>
+                <div className="text-xs text-subtle">Full VAT liability above threshold</div>
               </div>
             </label>
             
@@ -82,18 +82,18 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
                 value="custom"
                 checked={reform.taper_type === 'custom'}
                 onChange={() => handleTaperTypeChange('custom')}
-                className="mt-1 mr-3 w-4 h-4 accent-black"
+                className="mt-1 mr-3 w-4 h-4 accent-white"
               />
               <div>
                 <div className="font-medium">Custom taper</div>
-                <div className="text-xs">Define your own taper range</div>
+                <div className="text-xs text-subtle">Define your own taper range</div>
               </div>
             </label>
           </div>
         </div>
 
         {reform.taper_type === 'custom' && (
-          <div className="space-y-4 p-4 border border-black">
+          <div className="space-y-4 p-4 card">
             <div>
               <label className="block text-sm font-medium mb-2">
                 Taper start
@@ -104,7 +104,7 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
                   type="number"
                   value={reform.taper_start || ''}
                   onChange={(e) => setReform({ ...reform, taper_start: parseInt(e.target.value) })}
-                  className="flex-1 px-3 py-2 border border-black font-mono focus:outline-none focus:ring-0"
+                  className="flex-1 px-3 py-2 font-mono focus:outline-none focus:ring-0 input"
                   min="0"
                   max={reform.registration_threshold}
                   step="1000"
@@ -122,7 +122,7 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
                   type="number"
                   value={reform.taper_end || ''}
                   onChange={(e) => setReform({ ...reform, taper_end: parseInt(e.target.value) })}
-                  className="flex-1 px-3 py-2 border border-black font-mono focus:outline-none focus:ring-0"
+                  className="flex-1 px-3 py-2 font-mono focus:outline-none focus:ring-0 input"
                   min={reform.taper_start || reform.registration_threshold}
                   max="500000"
                   step="1000"
@@ -135,7 +135,7 @@ export default function PolicyForm({ onSubmit, isLoading }: PolicyFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 px-4 bg-black text-white font-medium hover:bg-white hover:text-black hover:border hover:border-black focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full py-3 px-4 font-medium btn-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Analysing...' : 'Analyse reform'}
         </button>

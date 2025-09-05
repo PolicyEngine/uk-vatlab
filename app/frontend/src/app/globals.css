@@ -10,10 +10,56 @@
   }
   
   body {
-    @apply font-sans;
+    @apply font-sans text-white;
+    background: linear-gradient(135deg, #00c4a7 0%, #006b58 100%);
+    min-height: 100vh;
   }
   
   .number {
     @apply font-mono;
+  }
+}
+
+@layer components {
+  .card {
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .divider {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+  }
+
+  .text-muted {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .text-subtle {
+    color: rgba(255, 255, 255, 0.70);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #2c5282, #4299e1);
+    color: #fff;
+    transition: all 150ms ease-in-out;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.05);
+  }
+
+  .input {
+    background: #fff;
+    color: #000;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+  }
+
+  .heading-grad {
+    background: linear-gradient(45deg, #ffffff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

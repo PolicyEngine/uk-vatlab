@@ -30,13 +30,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <header className="mb-8 border-b-2 border-black pb-4">
-          <h1 className="text-4xl font-medium tracking-tight">
+        <header className="mb-8 pb-4 divider">
+          <h1 className="text-4xl font-medium tracking-tight heading-grad">
             VAT policy simulator
           </h1>
-          <p className="text-sm mt-2">
+          <p className="text-sm mt-2 text-subtle">
             Analyse the fiscal impact of VAT registration threshold reforms over the budget window (2025-26 to 2030-31)
           </p>
         </header>
@@ -46,14 +46,14 @@ export default function Home() {
             <PolicyForm onSubmit={handleSubmitReform} isLoading={isLoading} />
             
             {error && (
-              <div className="mt-4 p-4 border border-black">
+              <div className="mt-4 p-4 card">
                 <p className="text-sm font-bold">{error}</p>
               </div>
             )}
             
-            <div className="mt-6 border border-black p-4">
-              <h3 className="font-medium mb-2">About</h3>
-              <p className="text-xs">
+            <div className="mt-6 p-4 card">
+              <h3 className="font-medium mb-2 heading-grad">About</h3>
+              <p className="text-xs text-muted">
                 This tool uses synthetic firm data to estimate the revenue impact of changes to the VAT registration threshold. 
                 The model accounts for firm growth, sectoral differences, and various tapering options to smooth the transition 
                 for businesses near the threshold.
@@ -65,12 +65,12 @@ export default function Home() {
             {results ? (
               <ResultsDisplay results={results} />
             ) : (
-              <div className="border-2 border-black p-12 text-center">
+              <div className="card p-12 text-center">
                 <svg className="mx-auto h-24 w-24 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <h3 className="text-xl font-medium mb-2">Design a reform to see results</h3>
-                <p className="text-sm">
+                <h3 className="text-xl font-medium mb-2 heading-grad">Design a reform to see results</h3>
+                <p className="text-sm text-subtle">
                   Configure the VAT registration threshold and tapering options to analyse their fiscal impact.
                 </p>
               </div>

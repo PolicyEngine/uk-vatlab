@@ -38,6 +38,7 @@ export interface PolicyAnalysisResult {
   total_impact: number;
   yearly_impacts: YearlyImpact[];
   revenue_band_impacts: RevenueBandImpact[];
+  unique_firms_affected: number;
   reform_summary: {
     registration_threshold: number;
     taper_type: string;

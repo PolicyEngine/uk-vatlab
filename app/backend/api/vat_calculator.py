@@ -396,6 +396,8 @@ class VATCalculator:
             
             # Age data once per year
             df = self.age_data(year_index)
+            # Preserve firm identity across years for de-duplication
+            df['firm_id'] = df.index
             
             # Calculate VAT liability once per year
             calc_start = time.time()
@@ -426,7 +428,7 @@ class VATCalculator:
                 "newly_deregistered": int(max(0, baseline_registered - reform_registered))
             })
         
-        # Combine all years for band analysis
+        # Combine all years for band analysis and unique affected calculation
         all_baseline = pd.concat(all_baseline_dfs, ignore_index=True)
         all_reform = pd.concat(all_reform_dfs, ignore_index=True)
         
@@ -464,6 +466,18 @@ class VATCalculator:
         all_baseline['changed'] = all_baseline['vat_liability'] != all_reform['vat_liability']
         affected_by_band = all_baseline[all_baseline['changed']].groupby('revenue_band')['weight'].sum()
         
+        # Unique firms affected across all years (use base weights for de-duplication)
+        if 'firm_id' in all_baseline.columns:
+            affected_ids = all_baseline.loc[all_baseline['changed'], 'firm_id'].unique()
+            try:
+                unique_firms_affected = int(self.firms_df.loc[affected_ids, 'weight'].sum())
+            except Exception:
+                # Fallback to unweighted unique count
+                unique_firms_affected = int(len(affected_ids))
+        else:
+            # Fallback: approximate by max yearly firms_affected
+            unique_firms_affected = int(max(y["firms_affected"] for y in yearly_impacts))
+        
         logger.info(f"Revenue band analysis completed in {time.time() - band_start:.3f}s")
         
         # Format revenue band impacts
@@ -491,6 +505,7 @@ class VATCalculator:
             "total_impact": total_impact,
             "yearly_impacts": yearly_impacts,
             "revenue_band_impacts": band_results,
+            "unique_firms_affected": unique_firms_affected,
             "reform_summary": {
                 "registration_threshold": reform.registration_threshold,
                 "taper_type": reform.taper_type,

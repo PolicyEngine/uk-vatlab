@@ -50,4 +50,5 @@ class PolicyAnalysisResult(BaseModel):
     total_impact: float
     yearly_impacts: List[YearlyImpact]
     revenue_band_impacts: List[RevenueBandImpact]
+    unique_firms_affected: int
     reform_summary: Dict
