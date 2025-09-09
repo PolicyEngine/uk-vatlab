@@ -9,6 +9,8 @@ Given actual turnover as "optimal y", solve for A_i (productivity) using FOC equ
 import numpy as np
 import pandas as pd
 from scipy.optimize import fsolve
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -426,6 +428,53 @@ valid_new_mask = ~np.isnan(df_valid['y_optimal_pure'])
 df_new_valid = df_valid[valid_new_mask].copy()
 print(f"   ✓ Valid solutions for {len(df_new_valid):,} firms ({100*len(df_new_valid)/len(df_valid):.1f}%)")
 
+def fit_counterfactual_curve(bin_centers, hist_values, threshold=85000):
+    """
+    Fit counterfactual density using degree 3 polynomial, same methodology as bunching_analysis.py
+    Excludes fixed range around threshold and uses distance from threshold as feature
+    """
+    # Convert to same units (£k)
+    bin_centers_k = bin_centers / 1000
+    threshold_k = threshold / 1000
+    
+    # Use same exclusion range as bunching_analysis.py: ±15k around threshold
+    y_minus = threshold_k - 15  # 15k below threshold
+    y_plus = threshold_k + 15   # 15k above threshold
+    exclude_mask = (bin_centers_k >= y_minus) & (bin_centers_k <= y_plus)
+    
+    # Fit on data outside the exclusion window
+    reg_mask = ~exclude_mask & (hist_values > 0)  # Also exclude zero bins
+    
+    if np.sum(reg_mask) < 10:  # Need enough points to fit
+        print("Warning: Not enough points for counterfactual fit")
+        return hist_values
+    
+    # Use distance from threshold as feature (same as bunching_analysis.py)
+    y_dist = bin_centers_k - threshold_k
+    
+    try:
+        # Fit polynomial (degree 3 as in bunching_analysis.py)
+        poly_features = PolynomialFeatures(degree=3, include_bias=True)
+        X_poly = poly_features.fit_transform(y_dist[reg_mask].reshape(-1, 1))
+        
+        # Fit regression
+        reg = LinearRegression(fit_intercept=False)
+        reg.fit(X_poly, hist_values[reg_mask])
+        
+        # Predict counterfactual for all points
+        X_all = poly_features.transform(y_dist.reshape(-1, 1))
+        f_cf = reg.predict(X_all)
+        
+        # Ensure positive predictions (same as bunching_analysis.py)
+        f_cf = np.maximum(f_cf, 0)
+        
+        print(f"   ✓ Fitted counterfactual curve excluding window [{threshold_k-15:.0f}k, {threshold_k+15:.0f}k]")
+        return f_cf
+    
+    except Exception as e:
+        print(f"Warning: Counterfactual fit failed: {e}")
+        return hist_values
+
 # =============================================================================
 # SECTION 6: PLOT DISTRIBUTION COMPARISON
 # =============================================================================
@@ -461,11 +510,13 @@ hist_pure_foc, _ = np.histogram(df_plot['y_optimal_pure_foc'], bins=bins,
 hist_uncertainty_only, _ = np.histogram(df_plot['y_uncertainty_only_95k'], bins=bins,
                                        weights=common_weights, density=False)
 
+# Fit counterfactual curve to actual distribution (red curve like in bunching_analysis.py)
+bin_centers = (edges[:-1] + edges[1:]) / 2
+hist_counterfactual = fit_counterfactual_curve(bin_centers, hist_actual, threshold=85000)
+
 # Verify totals
 print(f"   Histogram totals - Actual: {hist_actual.sum():.0f}, FOC: {hist_pure_foc.sum():.0f}, "
-      f"Uncertainty Only: {hist_uncertainty_only.sum():.0f}")
-
-bin_centers = (edges[:-1] + edges[1:]) / 2
+      f"Uncertainty Only: {hist_uncertainty_only.sum():.0f}, Counterfactual: {hist_counterfactual.sum():.0f}")
 
 # Create bunching version - move firms above threshold to just below
 hist_bunched = hist_pure_foc.copy()
@@ -498,10 +549,12 @@ hist_smooth[before_threshold_mask] = gaussian_filter1d(hist_pure_foc[before_thre
 hist_smooth[after_threshold_mask] = gaussian_filter1d(hist_pure_foc[after_threshold_mask], sigma=smoothing_sigma_after)
 
 # Plot distributions
-ax.plot(bin_centers/1000, hist_actual, 'b-', linewidth=3, 
+ax.plot(bin_centers/1000, hist_actual, 'blue', linewidth=3, 
         label='Actual Distribution (Current Tax)', alpha=0.8)
-ax.plot(bin_centers/1000, hist_pure_foc, 'red', linewidth=2, linestyle='-', 
-        label='Pure FOC Optimal (New Tax)', alpha=0.5)
+ax.plot(bin_centers/1000, hist_counterfactual, 'red', linewidth=2, linestyle='-', 
+        label='Counterfactual (No Bunching)', alpha=0.8)
+ax.plot(bin_centers/1000, hist_pure_foc, 'green', linewidth=2, linestyle='-', 
+        label='Pure FOC Optimal (New Tax)', alpha=0.7)
 ax.plot(bin_centers/1000, hist_uncertainty_only, 'orange', linewidth=2, linestyle='-',
         label='FOC + Uncertainty Only (New Tax)', alpha=0.7)
 

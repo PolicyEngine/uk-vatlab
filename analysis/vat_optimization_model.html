@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firm VAT Dynamic Modeling</title>
+    <title>Firm VAT dynamic modelling</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
@@ -48,9 +48,9 @@
     </style>
 </head>
 <body>
-    <h1>Firm VAT Dynamic Modeling</h1>
+    <h1>Firm VAT dynamic modelling</h1>
     
-    <h2>1. Introduction</h2>
+    <h2>1. Firm profit maximization problem</h2>
     
     <div class="equation">
         $$\max_{y_i} (1-\tau(y_i))y_i-c_i(y_i)$$
@@ -64,7 +64,7 @@
         $$\tau_{gov}(y_i)=f \text{ is known.}$$
     </div>
     
-    <h2>2. Deriving Marginal Cost from Data</h2>
+    <h2>2. Deriving marginal cost from data</h2>
     
     <p>From the production function with Cobb-Douglas technology:</p>
     
@@ -96,8 +96,6 @@
         $$\frac{\partial c_i(y_i)}{\partial y_i} = \frac{1}{\alpha} \cdot \frac{c_i(y_i)}{y_i}$$
     </div>
     
-    <h2>3. From Your Data</h2>
-    
     <p>Since you observe $X_i$ (input costs) and $Y_i$ (turnover) for each firm:</p>
     
     <div class="equation">
@@ -117,7 +115,7 @@
         $$\frac{\partial c_i(y_i)}{\partial y_i} = \frac{1}{0.9864} \cdot \frac{\text{input}_i}{\text{turnover}_i} = 1.014 \cdot \frac{\text{input}_i}{\text{turnover}_i}$$
     </div>
     
-    <h2>4. Smooth Tax Function: Sigmoid Approximation</h2>
+    <h2>3. Smooth tax function: sigmoid approximation</h2>
     
     <p>Instead of a step function at threshold $T^*$, we use a smooth sigmoid transition:</p>
     
@@ -144,7 +142,7 @@
         $$\frac{\partial \tau(y_i)}{\partial y_i} = k \cdot \tau(y_i) \cdot (1 - \frac{\tau(y_i)}{\tau_{max}})$$
     </div>
     
-    <h2>5. Deriving the First-Order Condition</h2>
+    <h2>4. Deriving the first-order condition</h2>
     
     <p><strong>Starting from the profit maximization problem:</strong></p>
     
@@ -165,10 +163,6 @@
     </div>
     
     <div class="equation">
-        $$= (1-\tau(y_i)) + y_i \cdot \left(-\frac{\partial\tau(y_i)}{\partial y_i}\right)$$
-    </div>
-    
-    <div class="equation">
         $$= (1-\tau(y_i)) - y_i \cdot \frac{\partial\tau(y_i)}{\partial y_i}$$
     </div>
     
@@ -186,26 +180,24 @@
     
     <p>The correct FOC shows that marginal revenue $(1-\tau)$ equals marginal cost plus the <strong>tax wedge effect</strong> $y_i \cdot \frac{\partial\tau}{\partial y_i}$, which represents the additional tax burden from producing one more unit.</p>
     
-    <p><strong>Step 1: Substitute Known Functions</strong></p>
-    
     <p>With sigmoid tax and Cobb-Douglas cost:</p>
     
     <div class="equation">
         $$1 - \frac{\tau_{max}}{1 + e^{-k(y_i^* - T^*)}} = \frac{1}{\alpha} \cdot \frac{1}{A_i^{1/\alpha}} \cdot (y_i^*)^{\frac{1-\alpha}{\alpha}} + \frac{k \cdot \tau_{max} \cdot e^{-k(y_i^* - T^*)}}{(1 + e^{-k(y_i^* - T^*)})^2}$$
     </div>
     
-    <h2>6. FOC + Uncertainty Only Model</h2>
+    <h2>5. Add uncertainty</h2>
     
-    <p>To isolate the effect of optimization uncertainty from bunching behavior, we implement a baseline model that applies only the uncertainty term to the FOC optimal solutions:</p>
+    <p>To separate the effects of optimisation uncertainty from strategic bunching behaviour, we implement a baseline model that incorporates uncertainty into the first-order condition (FOC) optimal solutions:</p>
     
-    <h3>6.1 Mathematical Formulation</h3>
+    <h3>5.1 Mathematical formulation</h3>
     
-    <p><strong>Threshold-Aware Uncertainty Model:</strong></p>
+    <p><strong>Threshold-aware uncertainty model:</strong></p>
     <div class="equation">
         $$y_{uncertainty} = y_{FOC}^* \times (1 + \varepsilon_i)$$
     </div>
     
-    <p>where the uncertainty term $\varepsilon_i$ is threshold-aware:</p>
+    <p>The uncertainty term $\varepsilon_i$ is threshold-aware and varies by firm location:</p>
     
     <div class="equation">
         $$\varepsilon_i = \begin{cases}
@@ -214,68 +206,114 @@
         \end{cases}$$
     </div>
     
-    <p>with asymmetric mean for firms close above threshold:</p>
+    <p>For firms close above the threshold, the mean is asymmetric:</p>
     <div class="equation">
         $$\mu_{skew} = -1.5\sigma \left(1 - \frac{y_{FOC}^* - T^*}{10000}\right)$$
     </div>
     
-    <p><strong>Economic Rationale:</strong> Firms close above thresholds face asymmetric risk - negative revenue shocks keep them below threshold (avoiding VAT), while positive shocks trigger VAT on all turnover. This creates natural precautionary behavior through uncertainty alone.</p>
+    <p><strong>Economic rationale:</strong> Firms operating close above thresholds face asymmetric risk. Negative revenue shocks keep them below the threshold (avoiding VAT registration), while positive shocks trigger VAT obligations on their entire turnover. This asymmetry creates natural precautionary behaviour through uncertainty effects alone.</p>
     
-    <h3>6.2 Purpose and Interpretation</h3>
+    <h3>5.2 Implementation</h3>
     
-    <p>This model serves as a <strong>baseline counterfactual</strong> that shows:</p>
+    <div class="equation">
+        $$\text{For each firm } i: \quad y_i^{\text{uncertainty}} = y_{FOC}^* \times (1 + \varepsilon_i)$$
+    </div>
+    
+    <p>The uncertainty term $\varepsilon_i$ is drawn from $N(0, 0.04^2)$ with a deterministic seed based on firm characteristics to ensure reproducible results across model runs.</p>
+
+    <h2>6. No-VAT counterfactual scenario</h2>
+    
+    <p>Building on the methodology from <strong>Liu & Lockwood (2015)</strong>, we implement a counterfactual estimation approach that uses polynomial regression to construct the "no-bunching" distribution - what the firm turnover distribution would look like in the absence of VAT registration thresholds.</p>
+    
+    <h3>6.1 Theoretical foundation</h3>
+    
+    <p>The counterfactual distribution represents the <strong>structural</strong> firm turnover distribution absent tax-induced distortions. Following the bunching literature (Saez, 2010; Chetty et al., 2011; Kleven & Waseem, 2013), we estimate this by fitting a smooth polynomial to observed data while excluding the "manipulation region" around the VAT threshold.</p>
+    
+    <div class="equation">
+        $$f^{cf}(T) = \text{Polynomial fit excluding } [T^* - W, T^* + W]$$
+    </div>
+    
+    <p>where $f^{cf}(T)$ is the counterfactual density, $T^*$ is the VAT threshold, and $W$ is the exclusion window width.</p>
+    
+    <h3>6.2 Implementation methodology</h3>
+    
+    <p><strong>Step 1: Exclusion window design</strong></p>
+    <p>We exclude a fixed range around the threshold to remove tax-distorted observations:</p>
+    
+    <div class="equation">
+        $$\text{Exclusion window: } [T^* - 15\text{k}, T^* + 15\text{k}] \text{ around } T^* = £90\text{k}$$
+    </div>
+    
+    <p><strong>Step 2: Distance-based feature engineering</strong></p>
+    <p>Following Liu & Lockwood (2015), we use distance from threshold as the regression feature:</p>
+    
+    <div class="equation">
+        $$y_{dist} = T - T^* \text{ (distance from £90k threshold)}$$
+    </div>
+    
+    <p><strong>Step 3: Third-order polynomial regression</strong></p>
+    <p>The counterfactual density is estimated using a cubic polynomial:</p>
+    
+    <div class="equation">
+        $$f^{cf}(T) = \beta_0 + \beta_1 y_{dist} + \beta_2 y_{dist}^2 + \beta_3 y_{dist}^3$$
+    </div>
+    
+    <p>fitted to observed data outside the exclusion window using ordinary least squares.</p>
+
+    <h2>7. Extracting elasticity</h2>
+    
+    <p>We extract firm-level elasticities by comparing two key distributions:</p>
     <ul>
-        <li>Which firms change turnover due to <em>uncertainty alone</em></li>
-        <li>Natural smoothing of the FOC distribution without behavioral assumptions</li>
-        <li>Clean separation between optimization noise and strategic bunching</li>
-        <li>Realistic firm heterogeneity through stochastic variation</li>
+        <li><strong>Real-world distribution</strong>: Observed firm turnover under current VAT system</li>
+        <li><strong>No-VAT distribution</strong>: Polynomial-fitted distribution representing firm behaviour without VAT distortions</li>
     </ul>
     
-    <h3>6.3 Implementation</h3>
+    <p>Our FOC + uncertainty model is calibrated to bridge these two distributions, allowing us to derive the distribution of elasticities across firms.</p>
+    
+    <h3>7.1 Firm-level elasticity distribution</h3>
+    
+    <p><strong>Individual firm elasticity:</strong></p>
+    <p>For each firm $i$, the elasticity is derived from the ratio of responses:</p>
     
     <div class="equation">
-        $$\text{For each firm } i: \quad y_i^{uncertainty} = \text{solve_FOC}(A_i, T_{new}^*) \times (1 + \varepsilon_i)$$
+        $$\varepsilon_i = \frac{\ln(y_i^{\text{no VAT}}) - \ln(y_i^{\text{observed}})}{\ln(1-\tau) - \ln(1)}$$
     </div>
     
-    <p>where $\varepsilon_i$ is firm-specific uncertainty drawn from $N(0, 0.04^2)$ with deterministic seed based on firm characteristics to ensure reproducibility.</p>
-
-    <h2>7. Extracting Elasticity from Calibrated Model</h2>
+    <p>where $\tau$ represents the firm's effective VAT burden.</p>
     
-    <p><strong>Method A: Numerical Derivative</strong></p>
+    <h3>7.2 Aggregate elasticity measures</h3>
     
-    <p>For small change in tax rate $\Delta\tau$:</p>
-    
+    <p><strong>Mean elasticity:</strong></p>
     <div class="equation">
-        $$\varepsilon = \frac{\ln y^*(\tau_{max} + \Delta\tau) - \ln y^*(\tau_{max})}{\ln(1-\tau_{max}-\Delta\tau) - \ln(1-\tau_{max})}$$
+        $$\bar{\varepsilon} = \frac{1}{N} \sum_{i=1}^{N} \varepsilon_i$$
     </div>
     
-    <p><strong>Method B: From Bunching Width</strong></p>
-    
-    <p>The bunching width in the calibrated model implies:</p>
-    
+    <p><strong>Weighted average elasticity:</strong></p>
     <div class="equation">
-        $$\Delta Y^* = Y_{max}^{bunch} - T^*$$
+        $$\varepsilon_{\text{weighted}} = \frac{\sum_{i=1}^{N} w_i \varepsilon_i y_i}{\sum_{i=1}^{N} w_i y_i}$$
     </div>
     
-    <p>Where $Y_{max}^{bunch}$ is the highest counterfactual output among bunching firms.</p>
+    <p>where $w_i$ are firm sampling weights.</p>
     
-    <p>The implied elasticity is:</p>
+    <h2>8. Distribution comparison</h2>
     
-    <div class="equation">
-        $$\varepsilon = \frac{\Delta Y^*/T^*}{\tau_{effective}}$$
+    <p>The following plot demonstrates the four key distributions in our analysis:</p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <img src="reverse_productivity_new_tax_distribution.png" 
+             alt="Distribution Comparison: Actual vs Counterfactual vs FOC Optimal vs FOC + Uncertainty" 
+             style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px;">
     </div>
     
-    <p>Where $\tau_{effective} = \frac{\tau_{max}}{2}$ at the threshold.</p>
+    <p><strong>Figure interpretation:</strong></p>
+    <ul>
+        <li><strong>Blue curve:</strong> Actual distribution (current tax) - shows observed firm behaviour under the £85k VAT threshold</li>
+        <li><strong>Red curve:</strong> Counterfactual (no bunching) - polynomial-fitted distribution representing firm behaviour without VAT distortions</li>
+        <li><strong>Green curve:</strong> Pure FOC optimal (new tax) - theoretical optimal distribution under the new £95k threshold</li>
+        <li><strong>Orange curve:</strong> FOC + uncertainty (new tax) - realistic distribution incorporating uncertainty effects</li>
+    </ul>
     
-    <p><strong>Method C: Aggregate Response</strong></p>
-    
-    <p>Compare total output with and without VAT:</p>
-    
-    <div class="equation">
-        $$\varepsilon_{aggregate} = \frac{\ln(\sum_i y_i^{no-vat}) - \ln(\sum_i y_i^{with-vat})}{\ln(1) - \ln(1-\bar{\tau})}$$
-    </div>
-    
-    <p>Where $\bar{\tau}$ is the average effective tax rate.</p>
+    <p>The comparison illustrates how our FOC + uncertainty model bridges the gap between the theoretical counterfactual and realistic firm responses, providing a foundation for extracting elasticity parameters.</p>
     
 </body>
 </html>
