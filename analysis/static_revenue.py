@@ -13,7 +13,7 @@ base_dir = os.path.dirname(current_dir)
 
 # Load the data with pre-calculated VAT liability
 print("Loading data...")
-synthetic_firms = pd.read_csv(os.path.join(current_dir, 'synthetic_firms_turnover.csv'))
+synthetic_firms = pd.read_csv(os.path.join(current_dir, 'synthetic_firms.csv'))
 
 weighted_total_firms = synthetic_firms['weight'].sum()
 print(f"Loaded {weighted_total_firms:,.0f} firms with pre-calculated VAT liability")
@@ -146,8 +146,8 @@ for fy in fiscal_years:
         "Baseline": f"£{fy['baseline']:,}",
         "Policy": f"£{fy['policy']:,}",
         "HMRC Revenue Impact (£m)": fy['hmrc_impact'],
-        "PolicyEngine Impact (£m)": round(pe_impact, 0),
-        "Difference": round(pe_impact - fy['hmrc_impact'], 0)
+        "PolicyEngine Impact (£m)": round(pe_impact, 3),
+        "Difference": round(pe_impact - fy['hmrc_impact'], 3)
     })
 
 # Create DataFrame for nice display
@@ -161,8 +161,8 @@ print("-"*100)
 
 for _, row in results_df.iterrows():
     print(f"{row['Fiscal Year']:<12} {row['Lagged RPI used']:<20} {row['Baseline']:<12} {row['Policy']:<12} "
-          f"{row['HMRC Revenue Impact (£m)']:>10} {row['PolicyEngine Impact (£m)']:>10} "
-          f"{row['Difference']:>10}")
+          f"{row['HMRC Revenue Impact (£m)']:>10} {row['PolicyEngine Impact (£m)']:>12.3f} "
+          f"{row['Difference']:>12.3f}")
 
 print("-"*100)
 print(f"\nNote: Negative values indicate revenue loss, positive values indicate revenue gain")

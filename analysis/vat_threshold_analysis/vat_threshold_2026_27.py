@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import json
 import plotly.express as px
-import plotly.graph_objects as go
 from typing import Dict
 from enum import Enum
 from pathlib import Path
@@ -25,13 +24,13 @@ class StandaloneVATCalculator:
         """Initialize the VAT calculator with synthetic firms data."""
         self.firms_df = pd.read_csv(data_path)
         
+        # Growth rates from static_revenue.py - cumulative from base year
         self.fiscal_years = [
-            {"year": "2025-26", "baseline": 90000, "firm_growth": 1.0516},
-            {"year": "2026-27", "baseline": 90000, "firm_growth": 1.0779},
-            {"year": "2027-28", "baseline": 90000, "firm_growth": 1.1102},
-            {"year": "2028-29", "baseline": 90000, "firm_growth": 1.1424},
-            {"year": "2029-30", "baseline": 90000, "firm_growth": 1.1761},
-            {"year": "2030-31", "baseline": 90000, "firm_growth": 1.2114},
+            {"year": "2024-25", "baseline": 90000, "firm_growth": 1.031},   # 3.1%
+            {"year": "2025-26", "baseline": 90000, "firm_growth": 1.0516},  # 1.031 * 1.020
+            {"year": "2026-27", "baseline": 90000, "firm_growth": 1.0779},  # Previous * 1.025
+            {"year": "2027-28", "baseline": 90000, "firm_growth": 1.1102},  # Previous * 1.030
+            {"year": "2028-29", "baseline": 90000, "firm_growth": 1.1424},  # Previous * 1.029
         ]
         
         self.vat_rate = 0.20
@@ -41,11 +40,9 @@ class StandaloneVATCalculator:
         df = self.firms_df.copy()
         growth_factor = self.fiscal_years[year_index]["firm_growth"]
         
-        # Apply growth to firm weights (population growth)
-        df['weight'] = df['weight'] * growth_factor
-        
-        # Apply turnover growth (2.5% per year linear)
-        df['annual_turnover_k'] = df['annual_turnover_k'] * (1 + (year_index * 0.025))
+        # Apply growth factor to turnover and VAT liability (like static_revenue.py)
+        df['annual_turnover_k'] = df['annual_turnover_k'] * growth_factor
+        df['vat_liability_k'] = df['vat_liability_k'] * growth_factor
         
         return df
 
@@ -98,7 +95,7 @@ class StandaloneVATCalculator:
         
         return df
 
-    def calculate_revenue_for_threshold(self, threshold: int, year_index: int = 1,
+    def calculate_revenue_for_threshold(self, threshold: int, year_index: int = 2,
                                        taper_type: TaperType = TaperType.NONE) -> Dict:
         """Calculate VAT revenue for a specific threshold and year."""
         year_info = self.fiscal_years[year_index]
@@ -133,7 +130,7 @@ class StandaloneVATCalculator:
             "newly_deregistered": int(max(0, baseline_registered - reform_registered))
         }
 
-    def calculate_revenue_curve(self, thresholds: list, year_index: int = 1,
+    def calculate_revenue_curve(self, thresholds: list, year_index: int = 2,
                               taper_type: TaperType = TaperType.NONE) -> pd.DataFrame:
         """Calculate revenue changes for multiple thresholds."""
         results = []
@@ -156,8 +153,8 @@ def generate_threshold_chart():
     # Define 11 example thresholds: from 70k to 120k including 90k
     thresholds = [70000, 75000, 80000, 85000, 90000, 95000, 100000, 105000, 110000, 115000, 120000]
     
-    # Calculate for 2026-27 fiscal year
-    year_index = 1
+    # Calculate for 2026-27 fiscal year (index 2 in the array)
+    year_index = 2
     fiscal_year = "2026-27"
     
     # Calculate results
