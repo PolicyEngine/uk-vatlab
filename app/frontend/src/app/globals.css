@@ -1,65 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@300;400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   * {
-    @apply border-black;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-  
+
   body {
-    @apply font-sans text-white;
-    background: linear-gradient(135deg, #00c4a7 0%, #006b58 100%);
+    @apply font-sans text-gray-900;
+    background-color: #f5f5f5;
     min-height: 100vh;
-  }
-  
-  .number {
-    @apply font-mono;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer components {
   .card {
-    background: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.20);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   .divider {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+    border-bottom: 1px solid #e5e7eb;
   }
 
   .text-muted {
-    color: rgba(255, 255, 255, 0.85);
+    color: #6b7280;
   }
 
   .text-subtle {
-    color: rgba(255, 255, 255, 0.70);
+    color: #9ca3af;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, #2c5282, #4299e1);
+    background-color: #319795;
     color: #fff;
-    transition: all 150ms ease-in-out;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
   }
 
   .btn-primary:hover {
-    filter: brightness(1.05);
+    background-color: #277674;
   }
 
   .input {
     background: #fff;
-    color: #000;
-    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: #111827;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease;
   }
 
-  .heading-grad {
-    background: linear-gradient(45deg, #ffffff, #f0f0f0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .input:focus {
+    outline: none;
+    border-color: #319795;
+    box-shadow: 0 0 0 3px rgba(49, 151, 149, 0.1);
   }
 }
