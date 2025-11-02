@@ -1,17 +1,11 @@
 import type { Metadata } from 'next'
-import { Roboto_Serif, Roboto_Mono } from 'next/font/google'
+import { Roboto } from 'next/font/google'
 import './globals.css'
 
-const robotoSerif = Roboto_Serif({ 
-  weight: ['300', '400', '500', '600'],
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
-  variable: '--font-roboto-serif'
-})
-
-const robotoMono = Roboto_Mono({ 
-  weight: ['300', '400', '500'],
-  subsets: ['latin'],
-  variable: '--font-roboto-mono'
+  variable: '--font-roboto'
 })
 
 export const metadata: Metadata = {
@@ -25,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${robotoSerif.variable} ${robotoMono.variable}`}>
+    <html lang="en" className={roboto.variable}>
       <body className="font-sans">{children}</body>
     </html>
   )
