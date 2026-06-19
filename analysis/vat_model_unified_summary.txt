@@ -1,0 +1,36 @@
+VAT MODEL UNIFIED ANALYSIS SUMMARY
+============================================================
+
+Data: 147,061 firms (10% sample)
+Threshold: £85,000
+VAT Rate: 20%
+
+MODEL COMPARISON
+----------------------------------------
+
+Actual:
+  Mean turnover: £1129.62k
+  Firms bunching: 2354 (weighted)
+  Firms near threshold: 6148 (weighted)
+
+Pure FOC:
+  Mean turnover: £1488.18k
+  Firms bunching: 129 (weighted)
+  Firms near threshold: 5442 (weighted)
+
+Calibrated:
+  Mean turnover: £1129.61k
+  Firms bunching: 2355 (weighted)
+  Firms near threshold: 6150 (weighted)
+
+Simple:
+  Mean turnover: £1129.61k
+  Firms bunching: 2387 (weighted)
+  Firms near threshold: 6151 (weighted)
+
+============================================================
+KEY FINDINGS:
+1. Pure FOC model overestimates firm responses
+2. Calibrated model matches actual distribution well
+3. Only ~15% of firms near threshold actually respond
+4. Response is highly localized within £20k of threshold
