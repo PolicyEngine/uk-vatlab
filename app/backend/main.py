@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from models import PolicyReform, PolicyAnalysisResult
 from vat_calculator import VATCalculator
 import logging
@@ -10,9 +11,22 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="VAT Policy Analysis API", version="1.0.0")
 
+# Allow local dev origins; configurable via ALLOWED_ORIGINS (comma-separated)
+default_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://frontend:3000",
+]
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS")
+allowed_origins = (
+    [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+    if allowed_origins_env
+    else default_origins
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://frontend:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
